@@ -1,0 +1,131 @@
+name: Build IPA
+
+on:
+  push:
+    branches: [ main ]
+    paths-ignore:
+      - '*.md'
+      - '.github/**'
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  build:
+    name: Build unsigned IPA
+    runs-on: macos-26
+    timeout-minutes: 40
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Select Xcode
+        run: |
+          set -euo pipefail
+          # 自动挑选 iOS SDK >= 26.0 的最新 Xcode，避免写死版本号
+          BEST=""
+          BEST_VER="0"
+          for APP in /Applications/Xcode*.app; do
+            [ -d "$APP" ] || continue
+            DEV="$APP/Contents/Developer"
+            [ -d "$DEV/Platforms/iPhoneOS.platform" ] || continue
+            SDK_VER=$(plutil -extract MinimumSDKVersion raw "$DEV/Platforms/iPhoneOS.platform/Info.plist" 2>/dev/null || echo 0)
+            XC_VER=$(plutil -extract CFBundleShortVersionString raw "$APP/Contents/Info.plist" 2>/dev/null || echo 0)
+            echo "found $APP (Xcode $XC_VER, iOS SDK $SDK_VER)"
+            if [ "$(printf '%s\n26.0\n' "$SDK_VER" | sort -V | head -1)" = "26.0" ]; then
+              if [ "$(printf '%s\n%s\n' "$BEST_VER" "$XC_VER" | sort -V | tail -1)" = "$XC_VER" ]; then
+                BEST="$DEV"; BEST_VER="$XC_VER"
+              fi
+            fi
+          done
+          if [ -z "$BEST" ]; then
+            echo "::error::没有找到包含 iOS 26+ SDK 的 Xcode（本工程 IPHONEOS_DEPLOYMENT_TARGET = 26.0）"
+            ls /Applications | grep -i xcode || true
+            exit 1
+          fi
+          echo "选用 Xcode $BEST_VER"
+          sudo xcode-select -s "$BEST"
+          xcodebuild -version
+          xcodebuild -showsdks | grep -i iphoneos || true
+
+      - name: Resolve ldid
+        run: |
+          # ldid 只用于写 entitlements 的伪签名，不是编译必需。
+          # 找不到时降级为不写 entitlements，IPA 仍可用于侧载重签。
+          if command -v ldid >/dev/null 2>&1; then
+            echo "已存在 ldid: $(command -v ldid)"
+          elif brew install ldid >/dev/null 2>&1 && command -v ldid >/dev/null 2>&1; then
+            echo "brew 安装成功"
+          else
+            echo "::warning::未能安装 ldid，将跳过 entitlements 写入"
+            echo "SKIP_LDID=1" >> "$GITHUB_ENV"
+          fi
+
+      - name: Build (ad-hoc, unsigned)
+        run: |
+          set -euo pipefail
+          xcodebuild \
+            -project Erosion.xcodeproj \
+            -scheme Erosion \
+            -configuration Release \
+            -derivedDataPath build/DerivedDataApp \
+            -destination 'generic/platform=iOS' \
+            build \
+            CODE_SIGN_IDENTITY="" \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_ENTITLEMENTS="" \
+            CODE_SIGNING_ALLOWED=NO \
+            DEVELOPMENT_TEAM="" \
+            ASSETCATALOG_COMPILER_OPTIMIZATION=space \
+            DEPLOYMENT_POSTPROCESSING=YES \
+            STRIP_SWIFT_SYMBOLS=YES \
+            SEPARATE_STRIP=YES \
+            STRIP_STYLE=all 2>&1 | tee build.log
+
+      - name: Package IPA
+        run: |
+          set -euo pipefail
+          APP="build/DerivedDataApp/Build/Products/Release-iphoneos/Erosion.app"
+          [ -d "$APP" ] || { echo "::error::未找到 .app，构建可能失败，见日志"; tail -60 build.log; exit 1; }
+
+          echo "[*] 移除原有签名"
+          codesign --remove "$APP" 2>/dev/null || true
+          rm -rf "$APP/_CodeSignature" "$APP/embedded.mobileprovision"
+
+          if [ "${SKIP_LDID:-0}" = "1" ]; then
+            echo "[*] 跳过 entitlements（ldid 不可用）"
+          else
+            echo "[*] 写入 entitlements（伪签名）"
+            ldid -S"Erosion/Erosion.entitlements" "$APP"
+          fi
+
+          echo "[*] 打包 Payload"
+          rm -rf Payload Erosion.ipa
+          mkdir -p Payload
+          cp -R "$APP" "Payload/Erosion.app"
+          zip -qry Erosion.ipa Payload
+
+          ls -lh Erosion.ipa
+          echo "VERSION=$(plutil -extract CFBundleShortVersionString raw "$APP/Info.plist" 2>/dev/null || echo 0)" >> "$GITHUB_ENV"
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: Erosion-ipa
+          path: Erosion.ipa
+          if-no-files-found: error
+
+      - name: Upload build log
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: build-log
+          path: build.log
+          if-no-files-found: ignore
+
+      - name: Release (tags only)
+        if: startsWith(github.ref, 'refs/tags/')
+        uses: softprops/action-gh-release@v2
+        with:
+          files: Erosion.ipa
+          fail_on_unmatched_files: true
