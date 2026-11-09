@@ -89,8 +89,12 @@ jobs:
           [ -d "$APP" ] || { echo "::error::未找到 .app，构建可能失败，见日志"; tail -60 build.log; exit 1; }
 
           echo "[*] 移除原有签名"
+          # codesign --remove 在完全未签名的产物上可能留下空的 _CodeSignature，
+          # 这里强制清理，避免侧载工具误判签名状态
           codesign --remove "$APP" 2>/dev/null || true
           rm -rf "$APP/_CodeSignature" "$APP/embedded.mobileprovision"
+          find "$APP" -name '_CodeSignature' -type d -prune -exec rm -rf {} + 2>/dev/null || true
+          find "$APP" -name 'CodeResources' -delete 2>/dev/null || true
 
           if [ "${SKIP_LDID:-0}" = "1" ]; then
             echo "[*] 跳过 entitlements（ldid 不可用）"
@@ -106,6 +110,14 @@ jobs:
           zip -qry Erosion.ipa Payload
 
           ls -lh Erosion.ipa
+
+          echo "[*] 校验产物"
+          [ -f "Payload/Erosion.app/Erosion" ] || { echo "::error::缺失可执行文件"; exit 1; }
+          if [ -e "Payload/Erosion.app/_CodeSignature" ]; then
+            echo "::error::_CodeSignature 残留未清理"
+            exit 1
+          fi
+          echo "构建版本: $(plutil -extract CFBundleShortVersionString raw "Payload/Erosion.app/Info.plist")"
           echo "VERSION=$(plutil -extract CFBundleShortVersionString raw "$APP/Info.plist" 2>/dev/null || echo 0)" >> "$GITHUB_ENV"
 
       - name: Upload artifact
