@@ -113,8 +113,10 @@ jobs:
 
           echo "[*] 校验产物"
           [ -f "Payload/Erosion.app/Erosion" ] || { echo "::error::缺失可执行文件"; exit 1; }
-          if [ -e "Payload/Erosion.app/_CodeSignature" ]; then
-            echo "::error::_CodeSignature 残留未清理"
+          # 注意：ldid 会自己生成 _CodeSignature（伪签名的正常产物），
+          # 因此这里只校验证书签名是否已不存在，不能要求该目录消失。
+          if [ -e "Payload/Erosion.app/embedded.mobileprovision" ]; then
+            echo "::error::仍存在 embedded.mobileprovision"
             exit 1
           fi
           echo "构建版本: $(plutil -extract CFBundleShortVersionString raw "Payload/Erosion.app/Info.plist")"
