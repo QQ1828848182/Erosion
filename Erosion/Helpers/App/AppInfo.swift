@@ -16,7 +16,7 @@ enum AppInfo {
         return Bundle.main.infoDictionary?["CFBundleShortVersionString"] as? String ?? "0.0"
     }
     public static var appBuild: String {
-        return Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "Unknown"
+        return Bundle.main.infoDictionary?["CFBundleVersion"] as? String ?? "未知"
     }
     public static var isDebug: Bool {
         #if DEBUG

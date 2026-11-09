@@ -32,7 +32,7 @@ func getBIDFromXattr(_ url: URL) -> String? {
         getxattr(url.path, "com.apple.containermanager.identifier", $0.baseAddress, 511, 0, XATTR_NOFOLLOW)
     }
     if len < 0 {
-        print("failed to read xattr: \(String(cString: strerror(errno))) (errno \(errno))")
+        print("读取扩展属性失败：\(String(cString: strerror(errno)))（errno \(errno)）")
         return nil
     }
     let bid = String(cString: buf)

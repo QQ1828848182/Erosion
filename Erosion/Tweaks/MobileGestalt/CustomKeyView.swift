@@ -24,20 +24,20 @@ struct CustomKeyView: View {
     var body: some View {
         List {
             Section {
-                TextField("Key", text: $cstkKey)
-                TextField("Value", value: $cstkValue, format: .number)
+                TextField("键", text: $cstkKey)
+                TextField("值", value: $cstkValue, format: .number)
                     .keyboardType(.numberPad)
-                Button("Add Key") {
+                Button("添加键") {
                     if cstkKey.isEmpty || cstkValue == nil {
-                        Alertinator.shared.alert(title: "This seems like an invaild key!", body: "Try putting something inside of this field, and then try again!")
+                        Alertinator.shared.alert(title: "这似乎不是有效的键！", body: "请先在该字段中填入内容，然后重试！")
                     } else if let _ = customKeys.firstIndex(where: { $0.key == cstkKey }) {
-                        Alertinator.shared.alert(title: "This key has already been added!", body: "Scroll to that key if you'd like to modify it.")
+                        Alertinator.shared.alert(title: "该键已经添加过了！", body: "如需修改，请滚动到该键。")
                     } else {
                         customKeys.append(MGCustomKey(key: cstkKey, value: cstkValue ?? 0))
                     }
                 }
             } header: {
-                HeaderLabel("Add Keys", symbol: "plus")
+                HeaderLabel("添加键", symbol: "plus")
             }
             
             Section {
@@ -55,7 +55,7 @@ struct CustomKeyView: View {
                 }
             }
         }
-        .navigationTitle("Custom Keys")
+        .navigationTitle("自定义键")
         .scrollDismissesKeyboard(.interactively)
         .sheet(item: $itemToEdit) { item in
             EditorPane(item: item)
@@ -87,18 +87,18 @@ struct CustomKeyView: View {
                     Text(item.key)
                         .frame(maxWidth: .infinity, alignment: .leading)
                         .modifier(TextFieldBackground())
-                    TextField("Value", value: $item.value, format: .number)
+                    TextField("值", value: $item.value, format: .number)
                         .modifier(TextFieldBackground())
                 }
                 .padding(.horizontal)
-                .navigationTitle("Modify Key")
+                .navigationTitle("修改键")
                 .navigationBarTitleDisplayMode(.inline)
                 .toolbar {
                     ToolbarItem(placement: .topBarLeading) {
                         Button {
                             dismiss()
                         } label: {
-                            Label("Close", systemImage: "xmark")
+                            Label("关闭", systemImage: "xmark")
                                 .labelStyle(.iconOnly)
                         }
                     }
@@ -110,7 +110,7 @@ struct CustomKeyView: View {
                             }
                             dismiss()
                         } label: {
-                            Label("Confirm", systemImage: "checkmark")
+                            Label("确认", systemImage: "checkmark")
                                 .labelStyle(.iconOnly)
                         }
                     }

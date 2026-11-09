@@ -103,11 +103,11 @@ final class PBHandler {
                         randomizeWPIds(targetURL)
                     }
                 }
-                print("(pb) imported new .tendies successfully!\nObject: \(tendiesObject)")
+                print("(pb) 新 .tendies 导入成功！\n对象：\(tendiesObject)")
                 return tendiesObject
             }
         } catch {
-            print("(pb) failed to extract .tendies: \(error.localizedDescription)")
+            print("(pb) 解压 .tendies 失败：\(error.localizedDescription)")
         }
         return nil
     }
@@ -141,15 +141,15 @@ final class PBHandler {
         do {
             guard let data = fm.contents(atPath: url.path),
                   var dict = try PropertyListSerialization.propertyList(from: data, options: [], format: nil) as? [String : Any] else {
-                throw "failed to get plist!"
+                throw "无法获取 Plist！"
             }
             dict[key] = value
             guard let newData = try? PropertyListSerialization.data(fromPropertyList: dict, format: .binary, options: 0) else {
-                throw "failed to serialize dict!"
+                throw "无法序列化字典！"
             }
             try newData.write(to: url)
         } catch {
-            print("(pb) failed to update plist: \(error.localizedDescription)")
+            print("(pb) 更新 Plist 失败：\(error.localizedDescription)")
         }
     }
 }

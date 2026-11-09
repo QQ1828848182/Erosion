@@ -15,39 +15,39 @@ struct SettingsView: View {
         NavigationStack {
             List {
                 Section {
-                    Toggle("Auto-Respring", isOn: $autoRespring)
+                    Toggle("自动 Respring", isOn: $autoRespring)
                 } header: {
-                    HeaderLabel("App Settings", symbol: "gearshape")
+                    HeaderLabel("应用设置", symbol: "gearshape")
                 } footer: {
-                    Text("Automatically resprings your device after applying a tweak.")
+                    Text("应用修改后自动 Respring 设备。")
                 }
                 
                 Section {
                     AppInfoCell(build: build)
                 } header: {
-                    HeaderLabel("About", symbol: "info.circle")
+                    HeaderLabel("关于", symbol: "info.circle")
                 } footer: {
-                    Text("Made with love by the [jailbreak.party](https://jailbreak.party) team.")
+                    Text("由 [jailbreak.party](https://jailbreak.party) 团队用爱心制作。")
                 }
                 
                 Section {
-                    LinkCreditCell(image: Image("lunginspector"), name: "lunginspector", description: "Primary developer and maintainer.", url: "https://github.com/lunginspector")
-                    LinkCreditCell(image: Image("forcequit"), name: "forcequit", description: "worse_query sandbox escape.", url: "https://github.com/forcequitOS")
-                    LinkCreditCell(image: Image("0xjohnny"), name: "0xjohnny", description: "worse_query sandbox escape.", url: "https://github.com/0xjohnnydev")
-                    LinkCreditCell(image: Image("skadz108"), name: "Skadz", description: "Exploit implementation, backend functions, and project maintainer.", url: "https://github.com/skadz108")
-                    LinkCreditCell(image: Image("rooootdev"), name: "rooootdev", description: "Various backend components.", url: "https://github.com/rooootdev")
-                    LinkCreditCell(image: Image("neonmodder123"), name: "neonmodder123", description: "Developed WebView respring method.", url: "https://github.com/neonmodder123")
+                    LinkCreditCell(image: Image("lunginspector"), name: "lunginspector", description: "主要开发者与维护者。", url: "https://github.com/lunginspector")
+                    LinkCreditCell(image: Image("forcequit"), name: "forcequit", description: "worse_query 沙盒逃逸。", url: "https://github.com/forcequitOS")
+                    LinkCreditCell(image: Image("0xjohnny"), name: "0xjohnny", description: "worse_query 沙盒逃逸。", url: "https://github.com/0xjohnnydev")
+                    LinkCreditCell(image: Image("skadz108"), name: "Skadz", description: "漏洞实现、后端功能与项目维护者。", url: "https://github.com/skadz108")
+                    LinkCreditCell(image: Image("rooootdev"), name: "rooootdev", description: "各类后端组件。", url: "https://github.com/rooootdev")
+                    LinkCreditCell(image: Image("neonmodder123"), name: "neonmodder123", description: "开发了 WebView respring 方法。", url: "https://github.com/neonmodder123")
                 } header: {
-                    HeaderLabel("Credits", symbol: "star")
+                    HeaderLabel("致谢", symbol: "star")
                 }
             }
-            .navigationTitle("Settings")
+            .navigationTitle("设置")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     Button {
                         dismiss()
                     } label: {
-                        ToolbarLabel("Close", symbol: "xmark")
+                        ToolbarLabel("关闭", symbol: "xmark")
                     }
                 }
             }

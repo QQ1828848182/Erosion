@@ -20,7 +20,7 @@ struct ContentView: View {
                     LogView()
                         .modifier(TerminalPlatter())
                 } header: {
-                    HeaderLabel("Logs", symbol: "apple.terminal")
+                    HeaderLabel("日志", symbol: "apple.terminal")
                 }
                 
                 Section {
@@ -28,7 +28,7 @@ struct ContentView: View {
                         mgr.shouldRespring = true
                     }
                 } header: {
-                    HeaderLabel("Actions", symbol: "gearshape")
+                    HeaderLabel("操作", symbol: "gearshape")
                 }
             }
             .navigationTitle("Erosion")
@@ -37,7 +37,7 @@ struct ContentView: View {
                     Button {
                         showSettings = true
                     } label: {
-                        Label("Settings", systemImage: "gear")
+                        Label("设置", systemImage: "gear")
                             .labelStyle(.iconOnly)
                     }
                 }

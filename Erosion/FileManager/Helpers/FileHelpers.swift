@@ -36,7 +36,7 @@ func getFileText(_ url: URL) -> String {
         
         return String(decoding: data, as: UTF8.self)
     } catch {
-        print("(fm) failed to get text! path: \(error.localizedDescription)")
+        print("(fm) 获取文本失败！路径：\(error.localizedDescription)")
         return ""
     }
 }
@@ -57,7 +57,7 @@ func makeTemp(_ fileURL: URL) -> URL? {
         try fm.copyItem(at: fileURL, to: tempURL)
         return tempURL
     } catch {
-        print("(fm) failed to make temp: \(error.localizedDescription)")
+        print("(fm) 创建临时文件失败：\(error.localizedDescription)")
     }
     return nil
 }
@@ -88,7 +88,7 @@ func renameFile(_ url: URL, to newName: String) -> Bool {
         try data.write(to: targetURL)
         return true
     } catch {
-        print("(fm) failed to rename file: \(error.localizedDescription)")
+        print("(fm) 重命名文件失败：\(error.localizedDescription)")
     }
     return false
 }
@@ -101,7 +101,7 @@ func zipFile(_ url: URL) -> Bool {
         try FileManager.default.zipItem(at: url, to: zipDest, shouldKeepParent: true)
         return true
     } catch {
-        print("(fm) failed to zip file: \(error.localizedDescription)")
+        print("(fm) 压缩文件失败：\(error.localizedDescription)")
     }
     return false
 }
@@ -113,7 +113,7 @@ func unzipFile(_ url: URL) -> Bool {
         try fm.unzipItem(at: url, to: unzipDest)
         return true
     } catch {
-        print("(fm) failed to uncompress file: \(error.localizedDescription)")
+        print("(fm) 解压文件失败：\(error.localizedDescription)")
     }
     return false
 }
@@ -134,7 +134,7 @@ func duplicateFile(_ url: URL) -> Bool {
         try data.write(to: targetURL)
         return true
     } catch {
-        print("(fm) failed to duplicate file: \(error.localizedDescription)")
+        print("(fm) 制作文件副本失败：\(error.localizedDescription)")
     }
     return false
 }
@@ -142,7 +142,7 @@ func duplicateFile(_ url: URL) -> Bool {
 func copyFileToClipboard(_ url: URL) -> Bool {
     do {
         guard let tempURL = makeTemp(url) else {
-            throw "failed to make temp!"
+            throw "无法创建临时文件！"
         }
         let data = try Data(contentsOf: tempURL)
         let utType = UTType(filenameExtension: tempURL.pathExtension) ?? .data
@@ -150,7 +150,7 @@ func copyFileToClipboard(_ url: URL) -> Bool {
         UIPasteboard.general.setData(data, forPasteboardType: utType.identifier)
         return true
     } catch {
-        print("(fm) failed to copy file: \(error.localizedDescription)")
+        print("(fm) 拷贝文件失败：\(error.localizedDescription)")
     }
     return false
 }

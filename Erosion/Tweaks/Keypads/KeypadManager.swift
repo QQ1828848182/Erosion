@@ -61,11 +61,11 @@ enum KPSize: Int, CaseIterable {
     
     var label: String {
         switch self {
-        case .defSize: return "Default"
-        case .small: return "Small"
-        case .medium: return "Medium"
-        case .large: return "Large"
-        case .custom: return "Custom"
+        case .defSize: return "默认"
+        case .small: return "小"
+        case .medium: return "中"
+        case .large: return "大"
+        case .custom: return "自定义"
         }
     }
 }
@@ -87,8 +87,8 @@ let emptyKeypadArray = [
 ]
 
 enum KPMsg {
-    static let resetWarn = "You'll lose both what you're currently editing and what you've already set inside of the Phone app."
-    static let applyComp = "For changes to take effect, open the Phone app and change the appearance until your custom keys show up. You can also restart your device. Do NOT force kill the Phone app!"
+    static let resetWarn = "你目前正在编辑的内容以及在「电话」应用中已设置的内容都将丢失。"
+    static let applyComp = "为使更改生效，请打开「电话」应用并切换外观，直到自定义按键显示出来。你也可以重启设备。切勿强制结束「电话」应用！"
 }
 
 let kp = KeypadManager()
@@ -136,7 +136,7 @@ final class KeypadManager: ObservableObject {
                 do {
                     try item.imgData.write(to: finalURL)
                 } catch {
-                    print("(kp) failed to write image data: \(error.localizedDescription)")
+                    print("(kp) 写入图像数据失败：\(error.localizedDescription)")
                     failed += 1
                 }
             }
@@ -157,7 +157,7 @@ final class KeypadManager: ObservableObject {
             clearKeypads()
             return true
         } catch {
-            print("(kp) failed to reset keypad items: \(error.localizedDescription)")
+            print("(kp) 重置键盘项目失败：\(error.localizedDescription)")
         }
         return false
     }
@@ -248,14 +248,14 @@ final class KeypadManager: ObservableObject {
             try fm.unzipItem(at: fileURL, to: filesURL)
             let dirURLs = try fm.contentsOfDirectory(at: filesURL, includingPropertiesForKeys: nil, options: .skipsHiddenFiles)
             if dirURLs.count < 1 {
-                throw "no files found inside of extracted folder!"
+                throw "解压后的文件夹中没有找到任何文件！"
             } else if dirURLs.count == 1 {
                 filesURL = filesURL.appendingPathComponent(dirURLs[0].lastPathComponent)
             } else {
                 if let index = dirURLs.firstIndex(where: { $0.lastPathComponent == "TelephonyUI-8" || $0.lastPathComponent == "TelephonyUI-9" || $0.lastPathComponent == "TelephonyUI-10" }) {
                     filesURL = filesURL.appendingPathComponent(dirURLs[index].lastPathComponent)
                 } else {
-                    throw "no telephonyui folders found inside of extracted folder!"
+                    throw "解压后的文件夹中没有找到 TelephonyUI 文件夹！"
                 }
             }
             // once extracted check each file for a match with the right image
@@ -296,12 +296,12 @@ final class KeypadManager: ObservableObject {
                 }
             }
             if replaceCount < 1 {
-                throw "the file was unzipped, but no keys were found?"
+                throw "文件已解压，但没有找到任何按键？"
             }
-            print("(kp) successfully imported theme! fileName: \(fileURL.lastPathComponent), imported keys: \(replaceCount)")
+            print("(kp) 主题导入成功！文件名：\(fileURL.lastPathComponent)，已导入按键数：\(replaceCount)")
             return true
         } catch {
-            print("(kp) failed to import theme: \(error.localizedDescription)")
+            print("(kp) 导入主题失败：\(error.localizedDescription)")
         }
         return false
     }

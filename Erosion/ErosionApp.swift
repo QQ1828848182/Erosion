@@ -41,17 +41,17 @@ struct ErosionApp: App {
             TabView {
                 ContentView()
                     .tabItem {
-                        Label("Home", systemImage: "house")
+                        Label("首页", systemImage: "house")
                     }
                     .id(0)
                 TweaksView()
                     .tabItem {
-                        Label("Tweaks", systemImage: "wrench.and.screwdriver")
+                        Label("修改", systemImage: "wrench.and.screwdriver")
                     }
                     .id(1)
                 FMRootView()
                     .tabItem {
-                        Label("File Browser", systemImage: "folder")
+                        Label("文件浏览", systemImage: "folder")
                     }
                     .id(2)
             }
@@ -78,10 +78,10 @@ struct ErosionApp: App {
                 print("[*] Erosion v\(AppInfo.appVersion) (\(build))")
                 print("[*] Running on \(UIDevice.current.systemName) \(UIDevice.current.systemVersion), \(machineName())")
                 if !isSupported() && !weOnADebugBuild {
-                    Alertinator.shared.alert(title: "Your \(device.systemName) version is not supported!", body: AppMsg.unsupported, showCancel: false, actionLabel: "Exit", action: { exitinator() })
+                    Alertinator.shared.alert(title: "你的 \(device.systemName) 版本不受支持！", body: AppMsg.unsupported, showCancel: false, actionLabel: "退出", action: { exitinator() })
                 }
                 group = wq.getAppGroup()
-                print("(wq) Using app group: \(group)")
+                print("(wq) 正在使用 App 群组：\(group)")
             }
             .overlay {
                 if mgr.shouldRespring {

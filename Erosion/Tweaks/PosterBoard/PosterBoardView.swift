@@ -12,13 +12,13 @@ import UniformTypeIdentifiers
 let pbHandler = PBHandler()
 
 enum PBMsg {
-    static var noTendies = "Import some tendies to start applying custom wallpapers."
-    static var tooManyTendies = "You can only set a maximum of 15 wallpapers at a time. De-select another wallpaper pack if you'd like to apply this one!"
-    static var limitWarning = "You have more than five wallpapers set. This may cause some wallpapers to not show up properly. Are you still sure that you'd like to apply these wallpapers?"
-    static var corruption = "Please ensure that none of your wallpapers are corrupted, and try again."
-    static var finishApply = "PosterBoard will open once you continue. Please kill it from the App Switcher. If no wallpapers show up, try resetting Collections, MercuryPoster, or Videos in the settings."
-    static var applyInfo = "If no wallpapers appear inside of PosterBoard, reset Collections in settings and try again."
-    static var imprtFailed = "Ensure that you've selected a vaild wallpaper file and try again."
+    static var noTendies = "导入一些 tendies 即可开始应用自定义壁纸。"
+    static var tooManyTendies = "一次最多只能设置 15 张壁纸。如果想应用这个壁纸包，请先取消选择另一个。"
+    static var limitWarning = "你已设置超过五张壁纸。这可能导致部分壁纸无法正常显示。你仍然确定要应用这些壁纸吗？"
+    static var corruption = "请确认没有任何壁纸已损坏，然后重试。"
+    static var finishApply = "继续后 PosterBoard 将会打开。请从应用切换器中结束它。如果没有出现壁纸，请尝试在设置中重置 Collections、MercuryPoster 或 Videos。"
+    static var applyInfo = "如果 PosterBoard 中没有出现壁纸，请在设置中重置 Collections 后重试。"
+    static var imprtFailed = "请确认你已选择有效的壁纸文件，然后重试。"
 }
 
 struct PosterBoardView: View {
@@ -36,7 +36,7 @@ struct PosterBoardView: View {
                     showImporter = true
                 } label: {
                     VStack(alignment: .leading) {
-                        CompactAlert(title: "No tendies imported!", symbol: "exclamationmark.triangle.fill", text: PBMsg.noTendies)
+                        CompactAlert(title: "尚未导入 tendies！", symbol: "exclamationmark.triangle.fill", text: PBMsg.noTendies)
                             .padding(.horizontal, 15)
                     }
                     .frame(alignment: .leading)
@@ -47,7 +47,7 @@ struct PosterBoardView: View {
                 ForEach($tendiesArray) { $tendies in
                     Button {
                         if !tendies.isOn && tendiesArray.filter({ $0.isOn }).flatMap({ $0.descrNames }).count > 15 {
-                            Alertinator.shared.alert(title: "Max wallpaper limit reached!", body: PBMsg.tooManyTendies)
+                            Alertinator.shared.alert(title: "已达壁纸数量上限！", body: PBMsg.tooManyTendies)
                         } else {
                             tendies.isOn.toggle()
                         }
@@ -60,7 +60,7 @@ struct PosterBoardView: View {
                                 Text(tendies.name)
                                     .lineLimit(1)
                                     .fontWeight(.medium)
-                                Text("\(tendies.descrNames.count) wallpaper" + (tendies.descrNames.count == 1 ? "" : "s"))
+                                Text("\(tendies.descrNames.count) 张壁纸" + (tendies.descrNames.count == 1 ? "" : "s"))
                                     .font(.footnote)
                                     .foregroundStyle(.secondary)
                             }
@@ -100,7 +100,7 @@ struct PosterBoardView: View {
                                 let url = AppURL.pbFolders.appendingPathComponent(tendies.folderName)
                                 fsHandlers.openInFilesApp(url)
                             } label: {
-                                Label("Show Data Folder", systemImage: "folder")
+                                Label("显示数据文件夹", systemImage: "folder")
                             }
                             
                             Button(role: .destructive) {
@@ -110,7 +110,7 @@ struct PosterBoardView: View {
                                     tendiesArray.removeAll { $0.id == tendies.id }
                                 }
                             } label: {
-                                Label("Delete", systemImage: "trash")
+                                Label("删除", systemImage: "trash")
                             }
                         }
                     }
@@ -119,7 +119,7 @@ struct PosterBoardView: View {
             .padding(.horizontal, 15)
             .foregroundStyle(Color(.label))
         }
-        .navigationTitle("Wallpapers")
+        .navigationTitle("壁纸")
         .navigationBarTitleDisplayMode(.inline)
         .onAppear {
             doSetupStuff()
@@ -129,7 +129,7 @@ struct PosterBoardView: View {
                 Button {
                     showImporter = true
                 } label: {
-                    ButtonLabel("Import .tendies", symbol: "arrow.down.doc")
+                    ButtonLabel("导入 .tendies", symbol: "arrow.down.doc")
                 }
             }
             .buttonStyle(ActionButtonStyle())
@@ -142,13 +142,13 @@ struct PosterBoardView: View {
                     Button {
                         showImporter = true
                     } label: {
-                        Label("Import .tendies", systemImage: "arrow.down.doc")
+                        Label("导入 .tendies", systemImage: "arrow.down.doc")
                     }
                     
                     Button {
                         openApp(withBID: SysBID.poster)
                     } label: {
-                        Label("Open PosterBoard", systemImage: "arrow.up.right.square")
+                        Label("打开 PosterBoard", systemImage: "arrow.up.right.square")
                     }
                     
                     Divider()
@@ -156,8 +156,8 @@ struct PosterBoardView: View {
                     NavigationLink {
                         List {
                             Section {
-                                TextField("PosterBoard Path", text: $pbContainerPath, axis: .vertical)
-                                Button("Fetch Path") {
+                                TextField("PosterBoard 路径", text: $pbContainerPath, axis: .vertical)
+                                Button("获取路径") {
                                     pbContainerPath = fsHandlers.getContainerPath(forMatch: "com.apple.PosterBoard")
                                 }
                             } header: {
@@ -165,40 +165,40 @@ struct PosterBoardView: View {
                             }
                             
                             Section {
-                                Button("Clear Imports") {
+                                Button("清除导入内容") {
                                     for object in tendiesArray {
                                         let url = AppURL.pbFolders.appendingPathComponent(object.folderName)
                                         try? fm.removeItem(at: url)
                                     }
                                     tendiesArray.removeAll()
                                 }
-                                Button("Reset Collections", role: .destructive) {
+                                Button("重置 Collections", role: .destructive) {
                                     let res = resetWallpapers(for: PBPath.wpKit)
                                     if res {
                                         Haptic.shared.play(.soft)
                                     }
                                 }
-                                Button("Reset MercuryPoster", role: .destructive) {
+                                Button("重置 MercuryPoster", role: .destructive) {
                                     let res = resetWallpapers(for: PBPath.mercury)
                                     if res {
                                         Haptic.shared.play(.soft)
                                     }
                                 }
-                                Button("Reset Videos", role: .destructive) {
+                                Button("重置 Videos", role: .destructive) {
                                     let res = resetWallpapers(for: PBPath.photos)
                                     if res {
                                         Haptic.shared.play(.soft)
                                     }
                                 }
                             } header: {
-                                HeaderLabel("Data", symbol: "loupe")
+                                HeaderLabel("数据", symbol: "loupe")
                             } footer: {
-                                Text("If you're having trouble applying custom wallpapers, try resetting any of the three extensions listed.")
+                                Text("如果自定义壁纸应用出现异常，请尝试重置下方列出的三个扩展中的任意一个。")
                             }
                         }
-                        .navigationTitle("PosterBoard Settings")
+                        .navigationTitle("PosterBoard 设置")
                     } label: {
-                        Label("Settings", systemImage: "gearshape")
+                        Label("设置", systemImage: "gearshape")
                     }
                 } label: {
                     Image(systemName: "ellipsis")
@@ -206,14 +206,14 @@ struct PosterBoardView: View {
             }
             
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Apply", role: .adaptiveConfirm) {
+                Button("应用", role: .adaptiveConfirm) {
                     if !hasShownFirstRunMsg {
-                        Alertinator.shared.alert(title: "Before you begin...", body: PBMsg.applyInfo, actionLabel: "Continue", action: {
+                        Alertinator.shared.alert(title: "开始之前…", body: PBMsg.applyInfo, actionLabel: "继续", action: {
                             hasShownFirstRunMsg = true
                             proceed()
                         })
                     } else if tendiesArray.filter({ $0.isOn }).flatMap({ $0.descrNames }).count > 5 {
-                        Alertinator.shared.alert(title: "Before you begin...", body: PBMsg.limitWarning, actionLabel: "Confirm", action: {
+                        Alertinator.shared.alert(title: "开始之前…", body: PBMsg.limitWarning, actionLabel: "确认", action: {
                             proceed()
                         })
                     } else {
@@ -225,13 +225,13 @@ struct PosterBoardView: View {
                         let res = applyObjects(tendiesArray.filter { $0.isOn })
                         if !res.0 {
                             if res.1.contains("an item with the same name already exists") {
-                                Alertinator.shared.alert(title: "Failed to apply wallpapers!", body: "Some of the wallpapers you selected have already been added.")
+                                Alertinator.shared.alert(title: "应用壁纸失败！", body: "你选择的某些壁纸已经添加过了。")
                             } else {
-                                Alertinator.shared.alert(title: "Failed to apply wallpapers!", body: PBMsg.corruption)
+                                Alertinator.shared.alert(title: "应用壁纸失败！", body: PBMsg.corruption)
                             }
                         } else {
                             Haptic.shared.play(.soft)
-                            Alertinator.shared.alert(title: "Restart PosterBoard to finish applying!", body: PBMsg.finishApply, showCancel: false, actionLabel: "Continue", action: { openApp(withBID: SysBID.poster) })
+                            Alertinator.shared.alert(title: "重启 PosterBoard 以完成应用！", body: PBMsg.finishApply, showCancel: false, actionLabel: "继续", action: { openApp(withBID: SysBID.poster) })
                         }
                     }
                 }
@@ -242,7 +242,7 @@ struct PosterBoardView: View {
         .fileImporter(isPresented: $showImporter, allowedContentTypes: [.item]) { result in
             let res = handleImport(result)
             if !res {
-                Alertinator.shared.alert(title: "Failed to import .tendies!", body: PBMsg.imprtFailed)
+                Alertinator.shared.alert(title: "导入 .tendies 失败！", body: PBMsg.imprtFailed)
             }
         }
     }
@@ -256,7 +256,7 @@ struct PosterBoardView: View {
                 try fm.createDirIfNeeded(at: AppURL.pb)
                 try fm.createDirIfNeeded(at: AppURL.pbFolders)
             } catch {
-                Alertinator.shared.alert(title: "Failed to setup PosterBoard tweaks!", body: AppMsg.opFailed)
+                Alertinator.shared.alert(title: "设置 PosterBoard 修改失败！", body: AppMsg.opFailed)
             }
         }
     }
@@ -267,7 +267,7 @@ struct PosterBoardView: View {
             let target = "\(pbContainerPath)/\(descrTarget.path)"
             let res = wq.grantAccess(path: target)
             if !res.0 {
-                print("(mg) failed to grant access at \(target): \(res.2)")
+                print("(mg) 授予 \(target) 访问权限失败：\(res.2)")
                 return (false, res.2)
             }
         }
@@ -280,7 +280,7 @@ struct PosterBoardView: View {
                 do {
                     try fm.copyItem(at: descrURL, to: target)
                 } catch {
-                    print("(mg) failed to copy descriptor (folder: \(object.folderName)): \(error.localizedDescription)")
+                    print("(mg) 拷贝描述符失败（文件夹：\(object.folderName)）：\(error.localizedDescription)")
                     return (false, error.localizedDescription)
                 }
             }
@@ -298,7 +298,7 @@ struct PosterBoardView: View {
             }
             return true
         } catch {
-            print("(pb) failed to reset \(item.rawValue): \(error.localizedDescription)")
+            print("(pb) 重置 \(item.rawValue) 失败：\(error.localizedDescription)")
             return false
         }
     }
@@ -319,7 +319,7 @@ struct PosterBoardView: View {
             }
             return true
         case .failure(let error):
-            print("(pb) failed to import file: \(error.localizedDescription)")
+            print("(pb) 导入文件失败：\(error.localizedDescription)")
             return false
         }
     }

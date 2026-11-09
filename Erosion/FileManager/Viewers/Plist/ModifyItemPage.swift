@@ -19,11 +19,11 @@ struct ModifyItemPage: View {
         List {
             Section {
                 if isEditing {
-                    TextField("Key", text: $item.key)
+                    TextField("键", text: $item.key)
                 } else {
                     Text(item.key)
                 }
-                Picker("Type", selection: $item.type) {
+                Picker("类型", selection: $item.type) {
                     ForEach(PlistItemType.allCases, id: \.self) { type in
                         if type != .unknown {
                             Text(type.label).id(type)
@@ -32,19 +32,19 @@ struct ModifyItemPage: View {
                 }
                 .disabled(!isEditing)
             } header: {
-                HeaderLabel("Identity", symbol: "creditcard")
+                HeaderLabel("标识", symbol: "creditcard")
             }
             
             Section {
                 switch item.type {
                 case .dict, .array:
-                    Button("Add Item") {
-                        item.dictVal.insert(PlistItem(key: "New Item", value: ""), at: 0)
+                    Button("添加项目") {
+                        item.dictVal.insert(PlistItem(key: "新项目", value: ""), at: 0)
                     }
                     .disabled(!isEditing)
                     ForEach($item.dictVal) { $nestItem in
                         ItemRow(item: $nestItem, hierarchy: 0).environmentObject(pmgr)
-                            .disabled(isEditing && nestItem.key == "New Item")
+                            .disabled(isEditing && nestItem.key == "新项目")
                             .swipeActions {
                                 if isEditing {
                                     Button(role: .destructive) {
@@ -65,17 +65,17 @@ struct ModifyItemPage: View {
                 }
             } header: {
                 if item.type == .dict || item.type == .array {
-                    HeaderLabel("Value (\(item.dictVal.count) items)", symbol: "character.cursor.ibeam")
+                    HeaderLabel("值（\(item.dictVal.count) 项）", symbol: "character.cursor.ibeam")
                 } else {
-                    HeaderLabel("Value", symbol: "character.cursor.ibeam")
+                    HeaderLabel("值", symbol: "character.cursor.ibeam")
                 }
             }
             
             if isEditing {
-                Button("Delete Item", role: .destructive) {
+                Button("删除项目", role: .destructive) {
                     let res = pmgr.writePlistItems(delItem: item)
                     if !res {
-                        Alertinator.shared.alert(title: "Failed to delete plist item!", body: Errors.checkLogs)
+                        Alertinator.shared.alert(title: "删除 Plist 项目失败！", body: Errors.checkLogs)
                     } else {
                         dismiss()
                     }
@@ -99,7 +99,7 @@ struct ModifyItemPage: View {
                         item = ogItem
                         isEditing = false
                     } label: {
-                        ToolbarLabel("Cancel", symbol: "xmark")
+                        ToolbarLabel("取消", symbol: "xmark")
                     }
                 }
             }
@@ -111,19 +111,19 @@ struct ModifyItemPage: View {
                         if res {
                             Haptic.shared.play(.soft)
                         } else {
-                            Alertinator.shared.alert(title: "Failed to write plist items!", body: "Check error logs for more detailed information.")
+                            Alertinator.shared.alert(title: "写入 Plist 项目失败！", body: "请查看错误日志以获取更详细的信息。")
                             item = ogItem
                         }
                         isEditing = false
                     } label: {
-                        ToolbarLabel("Save", symbol: "checkmark")
+                        ToolbarLabel("存储", symbol: "checkmark")
                     }
                 } else {
                     if pmgr.isWritable {
                         Button {
                             isEditing = true
                         } label: {
-                            ToolbarLabel("Edit", symbol: "pencil")
+                            ToolbarLabel("编辑", symbol: "pencil")
                         }
                     }
                 }

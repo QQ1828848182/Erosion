@@ -81,15 +81,15 @@ struct ItemRow: View {
         }
         .contextMenu {
             Menu {
-                Button("Key") {
+                Button("键") {
                     UIPasteboard.general.string = item.key
                 }
                 
-                Button("Value") {
+                Button("值") {
                     UIPasteboard.general.string = item.stringVal
                 }
             } label: {
-                Label("Copy...", systemImage: "doc.on.doc")
+                Label("拷贝…", systemImage: "doc.on.doc")
             }
         }
     }

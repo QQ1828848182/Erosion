@@ -37,10 +37,10 @@ struct GestaltView: View {
             List {
                 Section {
                     HStack {
-                        Picker("Subtype", selection: $mgSubtype) {
-                            Text("Original (\(mgOgSubtype))").tag(mgOgSubtype)
+                        Picker("子类型", selection: $mgSubtype) {
+                            Text("原厂 (\(mgOgSubtype))").tag(mgOgSubtype)
                             if isDynamIslandHD() && doubleSysVrs() < 19.0 {
-                                Text("Disable Dynamic Island").tag(2436)
+                                Text("关闭灵动岛").tag(2436)
                             }
                             Text("iPhone 14 Pro").tag(2436)
                             Text("iPhone 14 Pro Max").tag(2796)
@@ -56,63 +56,63 @@ struct GestaltView: View {
                                 Text("iPhone 18 Pro Max").tag(2670)
                             }
                             if isHomeButtonHD() {
-                                Text("iPhone X Gestures").tag(2436)
+                                Text("iPhone X 手势").tag(2436)
                             }
                         }
                         Spacer()
                         Button {
-                            Alertinator.shared.alert(title: "Subtype Info", body: MGMsg.subtype)
+                            Alertinator.shared.alert(title: "子类型说明", body: MGMsg.subtype)
                         } label: {
                             Image(systemName: "info.circle")
                                 .frame(width: 24, height: 22)
                         }
                         .buttonStyle(.plain)
                     }
-                    Toggle("Custom Device Name", isOn: $mgEnableDeviceName)
+                    Toggle("自定义设备名称", isOn: $mgEnableDeviceName)
                     if mgEnableDeviceName {
-                        TextField("Device Name", text: $mgDeviceName)
+                        TextField("设备名称", text: $mgDeviceName)
                     }
                 } header: {
-                    HeaderLabel("Artwork", symbol: "paintbrush.pointed")
+                    HeaderLabel("外观信息", symbol: "paintbrush.pointed")
                 }
                 
                 if !isDynamIslandHD() || !isAODHD() || !isBootChimeHD() || !isChargeLimitHD() || mgOverrideGates {
                     Section {
                         if !isDynamIslandHD() || mgOverrideGates {
-                            PlainToggle("Enable Dynamic Island", minVrs: 19.0, isOn: store.mgKeyBinding([MGKey.island]))
+                            PlainToggle("启用灵动岛", minVrs: 19.0, isOn: store.mgKeyBinding([MGKey.island]))
                         }
                         if !isAODHD() || mgOverrideGates {
-                            PlainToggle("Enable AOD", minVrs: 18.0, isOn: store.mgKeyBinding([MGKey.AOD, MGKey.AOTime]))
+                            PlainToggle("启用息屏显示", minVrs: 18.0, isOn: store.mgKeyBinding([MGKey.AOD, MGKey.AOTime]))
                             if store.isEnabled([MGKey.AOD]) {
-                                PlainToggle("Enable AOD Vibrancy", minVrs: 18.0, isOn: store.mgKeyBinding([MGKey.AODVibrancy]))
+                                PlainToggle("启用息屏显示色彩增强", minVrs: 18.0, isOn: store.mgKeyBinding([MGKey.AODVibrancy]))
                             }
                         }
                         if !isBootChimeHD() || mgOverrideGates {
-                            PlainToggle("Enable Charge Limit", minVrs: 17.0, isOn: store.mgKeyBinding([MGKey.chargeLim]))
+                            PlainToggle("启用充电上限", minVrs: 17.0, isOn: store.mgKeyBinding([MGKey.chargeLim]))
                         }
                         if !isChargeLimitHD() || mgOverrideGates {
-                            PlainToggle("Enable Boot Chime", isOn: store.mgKeyBinding([MGKey.bootChime]))
+                            PlainToggle("启用开机提示音", isOn: store.mgKeyBinding([MGKey.bootChime]))
                         }
                     } header: {
-                        HeaderLabel("Hardware Features", symbol: "gearshape")
+                        HeaderLabel("硬件功能", symbol: "gearshape")
                     }
                 }
                 
                 Section {
-                    PlainToggle("Enable Internal Install", infoType: .info, infoMessage: MGMsg.intInstall, isOn: store.mgKeyBinding([MGKey.intInstall]))
-                    PlainToggle("Enable Internal Build", infoType: .info, infoMessage: MGMsg.intBuild, isOn: store.mgKeyBinding([MGKey.intBuild]))
+                    PlainToggle("启用内部安装", infoType: .info, infoMessage: MGMsg.intInstall, isOn: store.mgKeyBinding([MGKey.intInstall]))
+                    PlainToggle("启用内部版本", infoType: .info, infoMessage: MGMsg.intBuild, isOn: store.mgKeyBinding([MGKey.intBuild]))
                 } header: {
-                    HeaderLabel("Internal", symbol: "ant")
+                    HeaderLabel("内部", symbol: "ant")
                 }
                 .disabled(store.isEnabled([MGKey.appIntell]))
                 
                 Section {
-                    PlainToggle("Enable SRD UI", minVrs: 26.0, isOn: store.mgKeyBinding([MGKey.srd]))
+                    PlainToggle("启用 SRD 界面", minVrs: 26.0, isOn: store.mgKeyBinding([MGKey.srd]))
                     if showRegionTweak {
-                        PlainToggle("Disable Region Restrictions", isOn: store.mgRegionRestrictionsBinding())
+                        PlainToggle("关闭地区限制", isOn: store.mgRegionRestrictionsBinding())
                     }
                     if !isAppleIntellHD() || mgOverrideGates {
-                        PlainToggle("Enable Apple Intelligence", minVrs: 18.1, isOn: store.mgKeyBinding([MGKey.appIntell]))
+                        PlainToggle("启用 Apple Intelligence", minVrs: 18.1, isOn: store.mgKeyBinding([MGKey.appIntell]))
                             .onChange(of: store.mgKeyBinding([MGKey.appIntell]).wrappedValue) { (oldVal, newVal) in
                                 if newVal {
                                     store.mgPullKeys([MGKey.intBuild, MGKey.intInstall])
@@ -120,8 +120,8 @@ struct GestaltView: View {
                             }
                     }
                     HStack(spacing: 10) {
-                        Picker("Spoofing", selection: $mgProductType) {
-                            Text("Default").tag(ogMachineName)
+                        Picker("伪装", selection: $mgProductType) {
+                            Text("默认").tag(ogMachineName)
                             if ogMachineName.contains("Pad") {
                                 if doubleSysVrs() >= 17.4 {
                                     Text("iPad Pro 11-inch (M4)").tag("iPad16,3")
@@ -152,7 +152,7 @@ struct GestaltView: View {
                             }
                         }
                         Button {
-                            Alertinator.shared.alert(title: "Device Spoofing Info", body: isAppleIntellHD() ? MGMsg.spoofUseless : MGMsg.spoofAI)
+                            Alertinator.shared.alert(title: "设备伪装说明", body: isAppleIntellHD() ? MGMsg.spoofUseless : MGMsg.spoofAI)
                         } label: {
                             Image(systemName: "info.circle")
                                 .frame(width: 24, height: 22)
@@ -160,38 +160,38 @@ struct GestaltView: View {
                         .buttonStyle(.plain)
                     }
                 } header: {
-                    HeaderLabel("Eligibility", symbol: "flag")
+                    HeaderLabel("资格", symbol: "flag")
                 }
                 
                 Section {
                     if !isCrashDectHD() || mgOverrideGates {
-                        PlainToggle("Crash Detection", isOn: store.mgKeyBinding([MGKey.crashDet]))
+                        PlainToggle("车祸检测", isOn: store.mgKeyBinding([MGKey.crashDet]))
                     }
                     if !isPWMHD() || mgOverrideGates {
-                        PlainToggle("Pulse Width Modulation", minVrs: 19.0, isOn: store.mgKeyBinding([MGKey.pwm]))
+                        PlainToggle("脉宽调制", minVrs: 19.0, isOn: store.mgKeyBinding([MGKey.pwm]))
                     }
                     if ogMachineName.contains("iPhone") || mgOverrideGates {
                         PlainToggle("Apple Pencil", isOn: store.mgKeyBinding([MGKey.appPencil]))
                     }
                     if !isCamControlHD() || mgOverrideGates {
-                        PlainToggle("Camera Control", minVrs: 18.0, isOn: store.mgKeyBinding([MGKey.camButton, MGKey.grapPefr]))
+                        PlainToggle("相机控制", minVrs: 18.0, isOn: store.mgKeyBinding([MGKey.camButton, MGKey.grapPefr]))
                     }
                     if !isActionButtonHD() || mgOverrideGates {
-                        PlainToggle("Action Button", minVrs: 17.0, isOn: store.mgKeyBinding([MGKey.actButton]))
+                        PlainToggle("操作按钮", minVrs: 17.0, isOn: store.mgKeyBinding([MGKey.actButton]))
                     }
                     if isHomeButtonHD() || mgOverrideGates {
-                        PlainToggle("Tap to Wake", isOn: store.mgKeyBinding([MGKey.tapToWake]))
+                        PlainToggle("轻点唤醒", isOn: store.mgKeyBinding([MGKey.tapToWake]))
                     }
                 } header: {
-                    HeaderLabel("Preference Bundles", symbol: "gear")
+                    HeaderLabel("偏好设置包", symbol: "gear")
                 }
                 
                 Section {
                     if machineName().contains("iPad") || mgOverrideGates {
-                        PlainToggle("Enable Stage Manager", isOn: store.mgKeyBinding([MGKey.stageMgr]))
+                        PlainToggle("启用台前调度", isOn: store.mgKeyBinding([MGKey.stageMgr]))
                     }
                     if store.strVal(forKey: MGKey.deviceClass) == "iPhone" || mgOverrideGates {
-                        PlainToggle("Enable iPadOS UI", infoType: .warning, infoMessage: MGMsg.ipadOS, isOn: store.mgTrollPadBinding())
+                        PlainToggle("启用 iPadOS 界面", infoType: .warning, infoMessage: MGMsg.ipadOS, isOn: store.mgTrollPadBinding())
                     }
                 } header: {
                     HeaderLabel("iPadOS", symbol: "ipad")
@@ -205,30 +205,30 @@ struct GestaltView: View {
                         Button {
                             mgRevert()
                         } label: {
-                            Label("Revert Tweaks", systemImage: "xmark")
+                            Label("还原修改", systemImage: "xmark")
                         }
                         
                         Button(role: .destructive) {
-                            Alertinator.shared.alert(title: "Are you sure you'd like to reset MobileGestalt?", body: MGMsg.mgReset, actionLabel: "Confirm", action: {
+                            Alertinator.shared.alert(title: "确定要重置 MobileGestalt 吗？", body: MGMsg.mgReset, actionLabel: "确认", action: {
                                 do {
                                     try fm.removeItem(at: MGURL.savedGestaltURL)
                                     try fm.removeItem(at: MGURL.fsGestaltURL)
                                     store.mgCurrentDict = NSMutableDictionary()
-                                    Alertinator.shared.alert(title: "Successfully reset MobileGestalt!", body: MGMsg.mgResetComp, showCancel: false, actionLabel: "Exit App", action: { exitinator() })
+                                    Alertinator.shared.alert(title: "MobileGestalt 已成功重置！", body: MGMsg.mgResetComp, showCancel: false, actionLabel: "退出应用", action: { exitinator() })
                                 } catch {
-                                    print("(mg) failed to reset mobilegestalt: \(error.localizedDescription)")
-                                    Alertinator.shared.alert(title: "Failed to reset MobileGestalt!", body: AppMsg.opFailed)
+                                    print("(mg) 重置 MobileGestalt 失败：\(error.localizedDescription)")
+                                    Alertinator.shared.alert(title: "重置 MobileGestalt 失败！", body: AppMsg.opFailed)
                                 }
                             })
                         } label: {
-                            Label("Reset Gestalt", systemImage: "trash")
+                            Label("重置 Gestalt", systemImage: "trash")
                         }
                         
                         Divider()
                         
                         if showCustomKeys {
                             NavigationLink(destination: CustomKeyView()) {
-                                Label("Custom Keys", systemImage: "pencil")
+                                Label("自定义键", systemImage: "pencil")
                             }
                         }
                         
@@ -236,41 +236,41 @@ struct GestaltView: View {
                         NavigationLink {
                             List {
                                 Section {
-                                    Button("Export Current Gestalt") {
+                                    Button("导出当前 Gestalt") {
                                         presentShareSheet(with: MGURL.fsGestaltURL)
                                     }
-                                    Button("Export Original Gestalt") {
+                                    Button("导出原始 Gestalt") {
                                         presentShareSheet(with: MGURL.savedGestaltURL)
                                     }
-                                    Button("Reset Saved Gestalt", role: .destructive) {
-                                        Alertinator.shared.alert(title: "Warning!", body: MGMsg.mgResetSavWarn, action: {
+                                    Button("重置已保存的 Gestalt", role: .destructive) {
+                                        Alertinator.shared.alert(title: "警告！", body: MGMsg.mgResetSavWarn, action: {
                                             try? fm.removeItem(at: MGURL.savedGestaltURL)
                                             let _ = mgLoadData()
                                         })
                                     }
                                 } header: {
-                                    HeaderLabel("Data", symbol: "loupe")
+                                    HeaderLabel("数据", symbol: "loupe")
                                 }
                                 
                                 Section {
-                                    PlainToggle("Show Hidden Tweaks", infoType: .warning, infoMessage: MGMsg.hidTweakWarn, isOn: $mgOverrideGates)
-                                    Toggle("Show Custom Keys", isOn: $showCustomKeys)
-                                    Toggle("Overwrite Atomically", isOn: $mgWriteAtomically)
+                                    PlainToggle("显示隐藏的修改", infoType: .warning, infoMessage: MGMsg.hidTweakWarn, isOn: $mgOverrideGates)
+                                    Toggle("显示自定义键", isOn: $showCustomKeys)
+                                    Toggle("原子写入覆盖", isOn: $mgWriteAtomically)
                                 } footer: {
-                                    Text("When atomic writes are enabled, MobileGestalt will not revert after a reboot.")
+                                    Text("启用原子写入后，MobileGestalt 在重启后将不会还原。")
                                 }
                             }
-                            .navigationTitle("Gestalt Settings")
+                            .navigationTitle("Gestalt 设置")
                         } label: {
-                            Label("Settings", systemImage: "gear")
+                            Label("设置", systemImage: "gear")
                         }
                     } label: {
-                        Label("Menu", systemImage: "ellipsis")
+                        Label("菜单", systemImage: "ellipsis")
                             .labelStyle(.iconOnly)
                     }
                 }
                 ToolbarItem(placement: .topBarTrailing) {
-                    Button("Apply", role: .adaptiveConfirm) {
+                    Button("应用", role: .adaptiveConfirm) {
                         if !hasShownSheet {
                             showInfoSheet = true
                         } else {
@@ -282,14 +282,14 @@ struct GestaltView: View {
             .sheet(isPresented: $showInfoSheet) {
                 NavigationStack {
                     VStack {
-                        InfoSheet(title: "Before you begin...") {
-                            InfoSheetCell(title: "Important Warning!", symbol: "exclamationmark.triangle.fill", context: MGMsg.support)
+                        InfoSheet(title: "开始之前…") {
+                            InfoSheetCell(title: "重要警告！", symbol: "exclamationmark.triangle.fill", context: MGMsg.support)
                                 .modifier(SectionPlatter())
-                            InfoSheetCell(title: "Apple Intelligence (Classic)", symbol: "apple.intelligence", context: MGMsg.spoofAI)
-                            InfoSheetCell(title: "iPadOS UI", symbol: "ipad", context: MGMsg.ipadOS)
-                            InfoSheetCell(title: "Region Restrictions", symbol: "map", context: MGMsg.region)
+                            InfoSheetCell(title: "Apple Intelligence（经典）", symbol: "apple.intelligence", context: MGMsg.spoofAI)
+                            InfoSheetCell(title: "iPadOS 界面", symbol: "ipad", context: MGMsg.ipadOS)
+                            InfoSheetCell(title: "地区限制", symbol: "map", context: MGMsg.region)
                         } button: {
-                            Button("Apply") {
+                            Button("应用") {
                                 showInfoSheet = false
                                 hasShownSheet = true
                                 idiotButtonTimerComplete = false
@@ -308,7 +308,7 @@ struct GestaltView: View {
                     }
                     .toolbar {
                         ToolbarItem(placement: .topBarTrailing) {
-                            Button("Cancel") {
+                            Button("取消") {
                                 showInfoSheet = false
                                 idiotButtonTimerComplete = false
                             }
@@ -322,7 +322,7 @@ struct GestaltView: View {
                 if !isWritable {
                     let res = wq.grantAccess(path: MGURL.fsGestaltURL.deletingLastPathComponent().path)
                     if !res.0 {
-                        Alertinator.shared.alert(title: "Failed to get write access to MobileGestalt!", body: "Tweaks will NOT apply. Maybe try restarting the app?")
+                        Alertinator.shared.alert(title: "获取 MobileGestalt 写入权限失败！", body: "修改将不会生效。也许可以尝试重启应用？")
                     }
                 }
             }
@@ -345,11 +345,11 @@ struct GestaltView: View {
                 mgOgSubtype = ogArtwork["ArtworkDeviceSubType"] as? Int ?? 0
                 mgOgDeviceName = ogArtwork["ArtworkDeviceProductDescription"] as? String ?? ""
             } else {
-                throw "failed to get information from mobilegestalt"
+                throw "无法从 MobileGestalt 获取信息"
             }
             
             guard let currentDict = NSMutableDictionary(contentsOf: MGURL.fsGestaltURL) else {
-                throw "failed to get nsmutabledictionary from mobilegestalt"
+                throw "无法从 MobileGestalt 获取可变字典"
             }
             
             if let cacheExtra = currentDict["CacheExtra"] as? NSDictionary,
@@ -364,9 +364,9 @@ struct GestaltView: View {
             
             return currentDict
         } catch {
-            print("(mg) failed to get mobilegestalt: \(error.localizedDescription)")
+            print("(mg) 获取 MobileGestalt 失败：\(error.localizedDescription)")
             Haptic.shared.play(.heavy)
-            Alertinator.shared.alert(title: "Failed to get MobileGestalt!", body: "Tweaks will not work properly. Please leave this page.", showCancel: false, actionLabel: "Exit", action: { dismiss() })
+            Alertinator.shared.alert(title: "获取 MobileGestalt 失败！", body: "修改将无法正常工作。请离开此页面。", showCancel: false, actionLabel: "退出", action: { dismiss() })
         }
         
         return [:]
@@ -391,51 +391,51 @@ struct GestaltView: View {
                     }
                 }
             } else {
-                throw "failed to write keys to mobilegestalt!"
+                throw "无法将键写入 MobileGestalt！"
             }
             
             let data = try PropertyListSerialization.data(fromPropertyList: mgDictToApply, format: .binary, options: 0)
             let res = mgWrite(data)
             
             if res {
-                print("[*] successfully overwrote mobilegestalt!")
+                print("[*] 已成功覆盖 MobileGestalt！")
                 Haptic.shared.play(.soft)
                 if autoRespring || isFromSheet {
                     mgr.shouldRespring = true
                 } else {
-                    Alertinator.shared.alert(title: "Successfully appiled MobileGestalt tweaks!", body: AppMsg.applied + (store.isEnabled([MGKey.appIntell]) ? " You'll have to reboot your device if you want to use Apple Intelligence." : ""), actionLabel: "Respring", action: { mgr.shouldRespring = true })
+                    Alertinator.shared.alert(title: "MobileGestalt 修改已成功应用！", body: AppMsg.applied + (store.isEnabled([MGKey.appIntell]) ? " 如果你需要使用 Apple Intelligence，则需要重启设备。" : ""), actionLabel: "Respring", action: { mgr.shouldRespring = true })
                 }
             } else {
-                throw "overwrite failed!"
+                throw "覆盖失败！"
             }
         } catch {
-            print("(mg) failed to apply mobilegestalt: \(error.localizedDescription)")
-            Alertinator.shared.alert(title: "Failed to apply MobileGestalt!", body: "Error: \(error.localizedDescription)")
+            print("(mg) 应用 MobileGestalt 失败：\(error.localizedDescription)")
+            Alertinator.shared.alert(title: "应用 MobileGestalt 失败！", body: "错误：\(error.localizedDescription)")
         }
     }
     
     private func mgRevert() {
         do {
             guard let mgDictToApply = NSMutableDictionary(contentsOf: MGURL.savedGestaltURL) else {
-                throw "failed to get mobilegestalt dict!"
+                throw "无法获取 MobileGestalt 字典！"
             }
             
             let data = try PropertyListSerialization.data(fromPropertyList: mgDictToApply, format: .binary, options: 0)
             let res = mgWrite(data)
             
             if res {
-                print("[*] successfully overwrote mobilegestalt!")
+                print("[*] 已成功覆盖 MobileGestalt！")
                 Haptic.shared.play(.soft)
                 if let dict = NSMutableDictionary(contentsOf: MGURL.savedGestaltURL) {
                     store.mgCurrentDict = dict
                 }
-                Alertinator.shared.alert(title: "Successfully reverted MobileGestalt tweaks!", body: MGMsg.revertComp)
+                Alertinator.shared.alert(title: "MobileGestalt 修改已成功还原！", body: MGMsg.revertComp)
             } else {
-                throw "overwrite failed!"
+                throw "覆盖失败！"
             }
         } catch {
-            print("(mg) failed to revert mobilegestalt: \(error.localizedDescription)")
-            Alertinator.shared.alert(title: "Failed to revert MobileGestalt!", body: AppMsg.opFailed)
+            print("(mg) 还原 MobileGestalt 失败：\(error.localizedDescription)")
+            Alertinator.shared.alert(title: "还原 MobileGestalt 失败！", body: AppMsg.opFailed)
         }
     }
 }

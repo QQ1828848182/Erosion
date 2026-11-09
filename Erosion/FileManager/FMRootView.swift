@@ -27,22 +27,22 @@ struct FMRootView: View {
         NavigationStack {
             List {
                 Section {
-                    NavigationLink("Data Containers", destination: FileBrowserView(path: FSURL.appContainers, isContainer: true))
-                    NavigationLink("Plugin Containers", destination: FileBrowserView(path: FSURL.appPlugins, isContainer: true))
-                    NavigationLink("App Groups", destination: FileBrowserView(path: FSURL.appGroup, shouldGrant: true))
+                    NavigationLink("数据容器", destination: FileBrowserView(path: FSURL.appContainers, isContainer: true))
+                    NavigationLink("插件容器", destination: FileBrowserView(path: FSURL.appPlugins, isContainer: true))
+                    NavigationLink("App 群组", destination: FileBrowserView(path: FSURL.appGroup, shouldGrant: true))
                 } header: {
-                    HeaderLabel("Apps", symbol: "square.grid.2x2")
+                    HeaderLabel("应用", symbol: "square.grid.2x2")
                 }
                 
                 Section {
-                    NavigationLink("Daemon Containers", destination: FileBrowserView(path: FSURL.internalDaemons, isContainer: true))
-                    NavigationLink("System Containers", destination: FileBrowserView(path: FSURL.systemData, shouldGrant: true))
-                    NavigationLink("SystemGroup Containers", destination: FileBrowserView(path: FSURL.sysGroup, isContainer: true))
+                    NavigationLink("守护进程容器", destination: FileBrowserView(path: FSURL.internalDaemons, isContainer: true))
+                    NavigationLink("系统容器", destination: FileBrowserView(path: FSURL.systemData, shouldGrant: true))
+                    NavigationLink("SystemGroup 容器", destination: FileBrowserView(path: FSURL.sysGroup, isContainer: true))
                 } header: {
-                    HeaderLabel("System", symbol: "gear")
+                    HeaderLabel("系统", symbol: "gear")
                 }
             }
-            .navigationTitle("File Browser")
+            .navigationTitle("文件浏览")
         }
     }
 }

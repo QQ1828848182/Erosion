@@ -5,6 +5,7 @@
   <h1>Erosion</h1>
   <p>iOS customization toolbox using the <a href="https://github.com/forcequitOS/worse_query">worse_query</a> sandbox escape.</p>
   <p>Supports iOS 26.0 - 26.7.2 & iOS 27.0 - 27.2.</p>
+  <p><b>简体中文：</b><a href="./README.zh-CN.md">README.zh-CN.md</a></p>
   <a href="https://github.com/jailbreakdotparty/Erosion/releases/latest"><img alt="GitHub Downloads (all assets, all releases)" src="https://img.shields.io/github/downloads/jailbreakdotparty/Erosion/total?style=flat-square&color=CF7D46"></a>
   <a href="https://github.com/jailbreakdotparty/Erosion/stargazers"> <img alt="GitHub Repo stars" src="https://img.shields.io/github/stars/jailbreakdotparty/erosion?style=flat-square&color=%23FFD300"></a> 
   <a href="https://jailbreak.party/discord"><img alt="Discord" src="https://img.shields.io/discord/1349128546072793218?style=flat-square&logo=discord&logoColor=FFFFFF&color=5865F2"></a> 

@@ -13,23 +13,23 @@ struct TweaksView: View {
         NavigationStack {
             List {
                 Section {
-                    NavigationLink("Custom Wallpapers", destination: PosterBoardView())
-                    NavigationLink("Dialer Themer", destination: KeypadView())
+                    NavigationLink("自定义壁纸", destination: PosterBoardView())
+                    NavigationLink("拨号键盘美化", destination: KeypadView())
                 } header: {
-                    HeaderLabel("Theming", symbol: "paintbrush")
+                    HeaderLabel("主题美化", symbol: "paintbrush")
                 }
                 
                 Section {
                     if raveSupported() || weOnADebugBuild {
                         NavigationLink("MobileGestalt", destination: GestaltView())
-                        NavigationLink("Config Tweaks", destination: ConfigView())
+                        NavigationLink("配置修改", destination: ConfigView())
                     }
-                    NavigationLink("File Operations", destination: OperationsView())
+                    NavigationLink("文件操作", destination: OperationsView())
                 } header: {
-                    HeaderLabel("System", symbol: "gear")
+                    HeaderLabel("系统", symbol: "gear")
                 }
             }
-            .navigationTitle("Tweaks")
+            .navigationTitle("修改")
         }
     }
 }

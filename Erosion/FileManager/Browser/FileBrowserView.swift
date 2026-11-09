@@ -17,11 +17,11 @@ enum FileSortMode: String, CaseIterable, Codable, Hashable {
     
     var label: String {
         switch self {
-        case .system: return "Default"
-        case .name: return "Name"
-        case .date: return "Date"
-        case .type: return "Type"
-        case .size: return "Size"
+        case .system: return "默认"
+        case .name: return "名称"
+        case .date: return "日期"
+        case .type: return "类型"
+        case .size: return "大小"
         }
     }
 }
@@ -57,18 +57,18 @@ struct FileBrowserView: View {
                         HStack {
                             ProgressView()
                                 .offset(y: 0.5)
-                            Text("Loading Files...")
+                            Text("正在加载文件…")
                                 .fontWeight(.medium)
                         }
                         if isContainer {
-                            Text("These files could take 30 seconds or longer to load, since the method of getting container paths is very slow.")
+                            Text("由于获取容器路径的方法非常缓慢，这些文件可能需要 30 秒甚至更久才能加载完成。")
                                 .font(.footnote)
                                 .foregroundStyle(.secondary)
                         }
                     }
                 }
             } else if showFailure {
-                CompactAlert(title: "Failed to load files from directory!", symbol: "folder.badge.questionmark", text: failMsg)
+                CompactAlert(title: "从目录加载文件失败！", symbol: "folder.badge.questionmark", text: failMsg)
                     .listRowInsets(EdgeInsets())
                     .listRowBackground(Color.clear)
             } else {
@@ -107,14 +107,14 @@ struct FileBrowserView: View {
                         filesAscend.toggle()
                     } label: {
                         if filesAscend {
-                            Label("Ascending", systemImage: "chevron.up")
+                            Label("升序", systemImage: "chevron.up")
                         } else {
-                            Label("Descending", systemImage: "chevron.down")
+                            Label("降序", systemImage: "chevron.down")
                         }
                     }
                     .disabled(chosenSort == .system)
                 } label: {
-                    Label("Sort", systemImage: "line.3.horizontal.decrease")
+                    Label("排序", systemImage: "line.3.horizontal.decrease")
                 }
                 .labelStyle(.iconOnly)
             }
@@ -123,7 +123,7 @@ struct FileBrowserView: View {
                     if !isContainer {
                         Menu {
                             Button {
-                                Alertinator.shared.prompt(title: "What would you like to call your new file? Make sure you attach an extension at the end.", placeholder: "new.txt", completion: { name in
+                                Alertinator.shared.prompt(title: "你想给新文件取什么名字？请务必在末尾加上扩展名。", placeholder: "new.txt", completion: { name in
                                     let name = name ?? ""
                                     if !name.isEmpty {
                                         do {
@@ -131,17 +131,17 @@ struct FileBrowserView: View {
                                             try Data().write(to: fileURL)
                                             mgr.refreshFiles.toggle()
                                         } catch {
-                                            print("(fm) failed to create file: \(error.localizedDescription)")
-                                            Alertinator.shared.alert(title: "Failed to create file!", body: Errors.checkLogs)
+                                            print("(fm) 创建文件失败：\(error.localizedDescription)")
+                                            Alertinator.shared.alert(title: "创建文件失败！", body: Errors.checkLogs)
                                         }
                                     }
                                 })
                             } label: {
-                                Label("File", systemImage: "doc")
+                                Label("文件", systemImage: "doc")
                             }
                             
                             Button {
-                                Alertinator.shared.prompt(title: "What would you like to call your new property list?", placeholder: "Plist Name", completion: { name in
+                                Alertinator.shared.prompt(title: "你想给新属性列表取什么名字？", placeholder: "属性列表名称", completion: { name in
                                     let name = name ?? ""
                                     if !name.isEmpty {
                                         do {
@@ -150,108 +150,108 @@ struct FileBrowserView: View {
                                             try data.write(to: fileURL)
                                             mgr.refreshFiles.toggle()
                                         } catch {
-                                            print("(fm) failed to create plist: \(error.localizedDescription)")
-                                            Alertinator.shared.alert(title: "Failed to create property list!", body: Errors.checkLogs)
+                                            print("(fm) 创建 Plist 失败：\(error.localizedDescription)")
+                                            Alertinator.shared.alert(title: "创建属性列表失败！", body: Errors.checkLogs)
                                         }
                                     }
                                 })
                             } label: {
-                                Label("Property List", systemImage: "tablecells")
+                                Label("属性列表", systemImage: "tablecells")
                             }
                             
                             Button {
-                                Alertinator.shared.prompt(title: "What would you like to call your new folder?", placeholder: "Folder Name", completion: { name in
+                                Alertinator.shared.prompt(title: "你想给新文件夹取什么名字？", placeholder: "文件夹名称", completion: { name in
                                     let name = name ?? ""
                                     if !name.isEmpty {
                                         do {
                                             try fm.createDirectoryIfNeeded(at: path.appendingPathComponent(name))
                                             mgr.refreshFiles.toggle()
                                         } catch {
-                                            print("(fm) failed to create folder: \(error.localizedDescription)")
-                                            Alertinator.shared.alert(title: "Failed to create folder!", body: Errors.checkLogs)
+                                            print("(fm) 创建文件夹失败：\(error.localizedDescription)")
+                                            Alertinator.shared.alert(title: "创建文件夹失败！", body: Errors.checkLogs)
                                         }
                                     }
                                 })
                             } label: {
-                                Label("Folder", systemImage: "folder")
+                                Label("文件夹", systemImage: "folder")
                             }
                             
                             Button {
-                                Alertinator.shared.prompt(title: "Where would you like your new symlink to point to?", placeholder: "/path/to/dir", completion: { symPath in
+                                Alertinator.shared.prompt(title: "你希望新的符号链接指向哪里？", placeholder: "/path/to/dir", completion: { symPath in
                                     let symPath = symPath ?? ""
                                     if !symPath.isEmpty {
                                         do {
                                             try fm.createSymbolicLink(atPath: path.appendingPathComponent(URL(fileURLWithPath: symPath).lastPathComponent).path, withDestinationPath: symPath)
                                             mgr.refreshFiles.toggle()
                                         } catch {
-                                            print("(fm) failed to create symlink: \(error.localizedDescription)")
-                                            Alertinator.shared.alert(title: "Failed to create symlink!", body: "\(error.localizedDescription)")
+                                            print("(fm) 创建符号链接失败：\(error.localizedDescription)")
+                                            Alertinator.shared.alert(title: "创建符号链接失败！", body: "\(error.localizedDescription)")
                                         }
                                     }
                                 })
                             } label: {
-                                Label("Symlink", systemImage: "arrow.up.right.circle")
+                                Label("符号链接", systemImage: "arrow.up.right.circle")
                             }
                         } label: {
-                            Label("New...", systemImage: "plus")
+                            Label("新建…", systemImage: "plus")
                         }
                         
                         Button {
                             showFileImporter.toggle()
                         } label: {
-                            Label("Import File", systemImage: "arrow.down.doc")
+                            Label("导入文件", systemImage: "arrow.down.doc")
                         }
                         Divider()
                     }
                     NavigationLink {
                         FileBrowserView(path: URL.documentsDirectory)
                     } label: {
-                        Label("Open App Docs", systemImage: "folder")
+                        Label("打开应用文档", systemImage: "folder")
                     }
                     NavigationLink {
                         List {
                             Section {
                                 HStack {
-                                    Text("Max Inode")
+                                    Text("最大 Inode")
                                     TextField("7500000", value: $maxInode, format: .number)
                                         .multilineTextAlignment(.trailing)
                                 }
                             } header: {
-                                HeaderLabel("Container Fetching", symbol: "externaldrive")
+                                HeaderLabel("容器抓取", symbol: "externaldrive")
                             } footer: {
-                                Text("This controls how quickly files can load. Lower values = faster fetching but less files.")
+                                Text("这会控制文件的加载速度。数值越低 = 抓取越快，但文件数量越少。")
                             }
                             
                             Section {
-                                Picker("List Style", selection: $listStyle) {
-                                    Text("Default").tag(1)
-                                    Text("Plain").tag(2)
-                                    Text("Grouped").tag(3)
+                                Picker("列表样式", selection: $listStyle) {
+                                    Text("默认").tag(1)
+                                    Text("普通").tag(2)
+                                    Text("分组").tag(3)
                                 }
-                                Toggle("Hide Dates", isOn: $hideDates)
+                                Toggle("隐藏日期", isOn: $hideDates)
                             } header: {
-                                HeaderLabel("View Options", symbol: "eye")
+                                HeaderLabel("显示选项", symbol: "eye")
                             }
                             
                             Section {
                                 Stepper(value: $textViewerSize) {
                                     HStack {
-                                        Text("Text Size")
+                                        Text("文字大小")
                                         Spacer()
                                         Text(textViewerSize.description)
                                     }
                                 }
-                                Toggle("Monospaced Font", isOn: $useMonospaced)
+                                Toggle("等宽字体", isOn: $useMonospaced)
                             } header: {
-                                HeaderLabel("Text Viewer", symbol: "doc.plaintext")
+                                HeaderLabel("文本查看器", symbol: "doc.plaintext")
                             }
                         }
-                        .navigationTitle("File Browser Settings")
+                        .navigationTitle("文件浏览设置")
                     } label: {
-                        Label("Settings", systemImage: "gearshape")
+                        Label("设置", systemImage: "gearshape")
                     }
                 } label: {
-                    Label("Actions", systemImage: "ellipsis")
+                    Label("操作", systemImage: "ellipsis")
                 }
                 .labelStyle(.iconOnly)
             }
@@ -275,7 +275,7 @@ struct FileBrowserView: View {
                         loadFilesFromPath()
                     } else {
                         showFailure = true
-                        failMsg = "You don't have permission to view this directory."
+                        failMsg = "你没有权限查看此目录。"
                     }
                 } else {
                     loadFilesFromPath()
@@ -330,9 +330,9 @@ struct FileBrowserView: View {
                 }
                 hasLoaded = true
             } catch {
-                print("(fm) failed to load files from \(path): \(error.localizedDescription)")
+                print("(fm) 从 \(path) 加载文件失败：\(error.localizedDescription)")
                 showFailure = true
-                failMsg = "You may not have permission to view this directory. Check error logs for more detailed info."
+                failMsg = "你可能没有权限查看此目录。查看错误日志以获取更详细的信息。"
             }
             isLoading = false
         }
@@ -380,12 +380,12 @@ struct FileBrowserView: View {
                 try data.write(to: newURL)
                 mgr.refreshFiles.toggle()
             } catch {
-                print("(fm) failed to import file: \(error.localizedDescription)")
-                Alertinator.shared.alert(title: "Failed to import file!", body: "\(error.localizedDescription)")
+                print("(fm) 导入文件失败：\(error.localizedDescription)")
+                Alertinator.shared.alert(title: "导入文件失败！", body: "\(error.localizedDescription)")
             }
         case .failure(let error):
-            print("(fm) failed to import file: \(error.localizedDescription)")
-            Alertinator.shared.alert(title: "Failed to import file!", body: "\(error.localizedDescription)")
+            print("(fm) 导入文件失败：\(error.localizedDescription)")
+            Alertinator.shared.alert(title: "导入文件失败！", body: "\(error.localizedDescription)")
         }
     }
 }

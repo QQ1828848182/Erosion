@@ -16,7 +16,7 @@ struct AppInfoCell: View {
             VStack(alignment: .leading) {
                 Text(AppInfo.appName)
                     .font(.title3.weight(.semibold))
-                Text("Version \(AppInfo.appVersion) (\(build))")
+                Text("版本 \(AppInfo.appVersion) (\(build))")
             }
         }
         .frame(maxWidth: .infinity, alignment: .leading)

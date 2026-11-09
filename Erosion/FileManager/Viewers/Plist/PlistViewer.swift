@@ -23,7 +23,7 @@ struct PlistViewer: View {
         NavigationView {
             List {
                 if showErrorView {
-                    PlainAlert(title: "Failed to load plist!", symbol: "exclamationmark.triangle.fill", text: Errors.checkLogs, color: .yellow)
+                    PlainAlert(title: "加载 Plist 失败！", symbol: "exclamationmark.triangle.fill", text: Errors.checkLogs, color: .yellow)
                 } else {
                     ForEach($pmgr.plistArray) { $item in
                         ItemRow(item: $item, hierarchy: 0)
@@ -39,7 +39,7 @@ struct PlistViewer: View {
                     HStack {
                         Spacer()
                         Button {
-                            Alertinator.shared.alert(title: "View-Only File", body: "You can only read this file.")
+                            Alertinator.shared.alert(title: "只读文件", body: "你只能读取此文件。")
                         } label: {
                             Image(systemName: "lock")
                                 .padding(10)
@@ -57,7 +57,7 @@ struct PlistViewer: View {
                             presentShareSheet(with: url)
                         }
                     } label: {
-                        Label("Share", systemImage: "square.and.arrow.up")
+                        Label("分享", systemImage: "square.and.arrow.up")
                             .labelStyle(.iconOnly)
                     }
                 }
@@ -66,7 +66,7 @@ struct PlistViewer: View {
                     Button {
                         dismiss()
                     } label: {
-                        ToolbarLabel("Close", symbol: "xmark")
+                        ToolbarLabel("关闭", symbol: "xmark")
                     }
                 }
             }

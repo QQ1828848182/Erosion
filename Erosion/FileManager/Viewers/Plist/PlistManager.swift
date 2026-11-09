@@ -28,7 +28,7 @@ final class PlistManager: ObservableObject {
             plistArray = plistArray.sorted(by: { $0.key < $1.key })
             return true
         } else {
-            print("(fm) failed to load plist as it seems like there was no passable dictionary?")
+            print("(fm) 加载 Plist 失败，似乎没有可用的字典？")
         }
         return false
     }
@@ -37,14 +37,14 @@ final class PlistManager: ObservableObject {
         if let newItem {
             let res = replacePlistItem(items: &plistArray, newItem: newItem)
             if !res {
-                print("(fm) failed to write plist: couldn't find \(newItem.key) in dictionary.")
+                print("(fm) 写入 Plist 失败：在字典中找不到 \(newItem.key)。")
             }
         }
         
         if let delItem {
             let res = deletePlistItem(items: &plistArray, target: delItem)
             if !res {
-                print("(fm) failed to write plist: couldn't find \(delItem.key) in dictionary.")
+                print("(fm) 写入 Plist 失败：在字典中找不到 \(delItem.key)。")
             }
         }
         
@@ -59,7 +59,7 @@ final class PlistManager: ObservableObject {
             try data.write(to: url)
             return true
         } catch {
-            print("(fm) failed to write plist: \(error.localizedDescription)")
+            print("(fm) 写入 Plist 失败：\(error.localizedDescription)")
         }
         return false
     }
@@ -125,7 +125,7 @@ struct PlistItem: Identifiable {
             self.stringVal = v.description
         case let v as [Any]:
             self.dictVal = v.enumerated().map { index, value in
-                var newItem = PlistItem(key: "Item \(index)", value: value)
+                var newItem = PlistItem(key: "项目 \(index)", value: value)
                 newItem.index = index
                 return newItem
             }
@@ -177,14 +177,14 @@ enum PlistItemType: String, CaseIterable {
     
     var label: String {
         switch self {
-        case .string: return "String"
-        case .int: return "Integer"
-        case .double: return "Double"
-        case .bool: return "Boolean"
-        case .data: return "Data"
-        case .dict: return "Dictionary"
-        case .array: return "Array"
-        default: return "Unknown"
+        case .string: return "字符串"
+        case .int: return "整数"
+        case .double: return "浮点数"
+        case .bool: return "布尔值"
+        case .data: return "数据"
+        case .dict: return "字典"
+        case .array: return "数组"
+        default: return "未知"
         }
     }
 }

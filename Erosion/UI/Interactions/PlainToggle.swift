@@ -21,7 +21,7 @@ struct PlainToggle: View {
     var maxVrs: Double
     @Binding var isOn: Bool
     
-    public init(_ text: String, icon: String = "", infoType: ToggleInfoType = .none, infoTitle: String = "Information", infoMessage: String = "", minVrs: Double = 0.0, maxVrs: Double = 100.0, isOn: Binding<Bool>) {
+    public init(_ text: String, icon: String = "", infoType: ToggleInfoType = .none, infoTitle: String = "信息", infoMessage: String = "", minVrs: Double = 0.0, maxVrs: Double = 100.0, isOn: Binding<Bool>) {
         self.text = text
         self.icon = icon
         self.infoType = infoType

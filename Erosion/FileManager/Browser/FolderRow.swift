@@ -58,7 +58,7 @@ struct FolderRow: View {
                 Button {
                     previewURL = file.fileURL
                 } label: {
-                    Label("Quick Look", systemImage: "eye")
+                    Label("快速查看", systemImage: "eye")
                 }
                 
                 Divider()
@@ -66,7 +66,7 @@ struct FolderRow: View {
                 Button {
                     showInfo.toggle()
                 } label: {
-                    Label("Get Info", systemImage: "info.circle")
+                    Label("显示简介", systemImage: "info.circle")
                 }
                 
                 Button {
@@ -74,10 +74,10 @@ struct FolderRow: View {
                     if res {
                         mgr.refreshFiles.toggle()
                     } else {
-                        Alertinator.shared.alert(title: "Failed to compress file!", body: Errors.checkLogs)
+                        Alertinator.shared.alert(title: "压缩文件失败！", body: Errors.checkLogs)
                     }
                 } label: {
-                    Label("Compress", systemImage: "archivebox")
+                    Label("压缩", systemImage: "archivebox")
                 }
                 
                 Divider()
@@ -87,7 +87,7 @@ struct FolderRow: View {
                         presentShareSheet(with: url)
                     }
                 } label: {
-                    Label("Share", systemImage: "square.and.arrow.up")
+                    Label("分享", systemImage: "square.and.arrow.up")
                 }
                 
                 Divider()
@@ -96,7 +96,7 @@ struct FolderRow: View {
                     try? fm.removeItem(at: file.fileURL)
                     mgr.refreshFiles.toggle()
                 } label: {
-                    Label("Delete", systemImage: "trash")
+                    Label("删除", systemImage: "trash")
                 }
             }
         }

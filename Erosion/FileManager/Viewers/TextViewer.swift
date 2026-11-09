@@ -51,7 +51,7 @@ struct TextViewer: View {
                     HStack {
                         Spacer()
                         Button {
-                            Alertinator.shared.alert(title: "View-Only File", body: "You can only read this file.")
+                            Alertinator.shared.alert(title: "只读文件", body: "你只能读取此文件。")
                         } label: {
                             Image(systemName: "lock")
                                 .padding(10)
@@ -69,7 +69,7 @@ struct TextViewer: View {
                             isEditing = false
                             editText = fileText
                         } label: {
-                            ToolbarLabel("Cancel", symbol: "xmark")
+                            ToolbarLabel("取消", symbol: "xmark")
                         }
                     }
                     
@@ -78,7 +78,7 @@ struct TextViewer: View {
                             Button {
                                 isEditing = true
                             } label: {
-                                Label("Edit", systemImage: "pencil")
+                                Label("编辑", systemImage: "pencil")
                             }
                         }
                         
@@ -86,7 +86,7 @@ struct TextViewer: View {
                             Haptic.shared.play(.soft)
                             UIPasteboard.general.string = fileText
                         } label: {
-                            Label("Copy", systemImage: "doc.on.doc")
+                            Label("拷贝", systemImage: "doc.on.doc")
                         }
                         
                         Button {
@@ -94,10 +94,10 @@ struct TextViewer: View {
                                 presentShareSheet(with: url)
                             }
                         } label: {
-                            Label("Share", systemImage: "square.and.arrow.up")
+                            Label("分享", systemImage: "square.and.arrow.up")
                         }
                     } label: {
-                        Label("Menu", systemImage: "ellipsis")
+                        Label("菜单", systemImage: "ellipsis")
                             .labelStyle(.iconOnly)
                     }
                 }
@@ -111,14 +111,14 @@ struct TextViewer: View {
                                 fileText = getFileText(fileURL)
                             }
                         } label: {
-                            ToolbarLabel("Save", symbol: "checkmark")
+                            ToolbarLabel("存储", symbol: "checkmark")
                         }
                     } else {
                         Button {
                             dismiss()
                             mgr.refreshFiles.toggle()
                         } label: {
-                            ToolbarLabel("Close", symbol: "xmark")
+                            ToolbarLabel("关闭", symbol: "xmark")
                         }
                     }
                 }
@@ -139,7 +139,7 @@ struct TextViewer: View {
             try data.write(to: url)
             return true
         } catch {
-            print("(fm) failed to write data: \(error.localizedDescription)")
+            print("(fm) 写入数据失败：\(error.localizedDescription)")
         }
         return false
     }

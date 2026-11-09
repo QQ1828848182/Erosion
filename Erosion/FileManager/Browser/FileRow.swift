@@ -126,14 +126,14 @@ struct FileRow: View {
                     Button {
                         previewURL = file.fileURL
                     } label: {
-                        Label("Quick Look", systemImage: "eye")
+                        Label("快速查看", systemImage: "eye")
                     }
                     
                     if conformsPlist {
                         Button {
                             showPlistViewer.toggle()
                         } label: {
-                            Label("Plist Viewer", systemImage: "tablecells")
+                            Label("Plist 查看器", systemImage: "tablecells")
                         }
                     }
                     
@@ -141,17 +141,17 @@ struct FileRow: View {
                         Button {
                             showTextViewer.toggle()
                         } label: {
-                            Label("Text Viewer", systemImage: "doc.plaintext")
+                            Label("文本查看器", systemImage: "doc.plaintext")
                         }
                     }
                 } label: {
-                    Label("View In...", systemImage: "doc.text.magnifyingglass")
+                    Label("查看方式…", systemImage: "doc.text.magnifyingglass")
                 }
             } else {
                 Button {
                     previewURL = file.fileURL
                 } label: {
-                    Label("Quick Look", systemImage: "eye")
+                    Label("快速查看", systemImage: "eye")
                 }
             }
             
@@ -160,23 +160,23 @@ struct FileRow: View {
             Button {
                 showInfo.toggle()
             } label: {
-                Label("Get Info", systemImage: "info.circle")
+                Label("显示简介", systemImage: "info.circle")
             }
             
             if file.type == .file {
                 Button {
-                    Alertinator.shared.prompt(title: "What would you like to call this file?", placeholder: file.name, completion: { result in
+                    Alertinator.shared.prompt(title: "你想给这个文件取什么名字？", placeholder: file.name, completion: { result in
                         if let name = result {
                             let res = renameFile(file.fileURL, to: name)
                             if res {
                                 mgr.refreshFiles.toggle()
                             } else {
-                                Alertinator.shared.alert(title: "Failed to rename file!", body: Errors.checkLogs)
+                                Alertinator.shared.alert(title: "重命名文件失败！", body: Errors.checkLogs)
                             }
                         }
                     })
                 } label: {
-                    Label("Rename", systemImage: "pencil")
+                    Label("重命名", systemImage: "pencil")
                 }
             }
             
@@ -187,10 +187,10 @@ struct FileRow: View {
                         if res {
                             mgr.refreshFiles.toggle()
                         } else {
-                            Alertinator.shared.alert(title: "Failed to uncompress file!", body: Errors.checkLogs)
+                            Alertinator.shared.alert(title: "解压文件失败！", body: Errors.checkLogs)
                         }
                     } label: {
-                        Label("Uncompress", systemImage: "archivebox")
+                        Label("解压", systemImage: "archivebox")
                     }
                 } else {
                     Button {
@@ -198,10 +198,10 @@ struct FileRow: View {
                         if res {
                             mgr.refreshFiles.toggle()
                         } else {
-                            Alertinator.shared.alert(title: "Failed to compress file!", body: Errors.checkLogs)
+                            Alertinator.shared.alert(title: "压缩文件失败！", body: Errors.checkLogs)
                         }
                     } label: {
-                        Label("Compress", systemImage: "archivebox")
+                        Label("压缩", systemImage: "archivebox")
                     }
                 }
             }
@@ -212,10 +212,10 @@ struct FileRow: View {
                     if res {
                         mgr.refreshFiles.toggle()
                     } else {
-                        Alertinator.shared.alert(title: "Failed to duplicate file!", body: Errors.checkLogs)
+                        Alertinator.shared.alert(title: "制作文件副本失败！", body: Errors.checkLogs)
                     }
                 } label: {
-                    Label("Duplicate", systemImage: "plus.square.on.square")
+                    Label("制作副本", systemImage: "plus.square.on.square")
                 }
             }
             
@@ -224,10 +224,10 @@ struct FileRow: View {
             Button {
                 let res = copyFileToClipboard(file.fileURL)
                 if !res {
-                    Alertinator.shared.alert(title: "Failed to copy file!", body: Errors.checkLogs)
+                    Alertinator.shared.alert(title: "拷贝文件失败！", body: Errors.checkLogs)
                 }
             } label: {
-                Label("Copy", systemImage: "doc.on.doc")
+                Label("拷贝", systemImage: "doc.on.doc")
             }
             
             Button {
@@ -235,7 +235,7 @@ struct FileRow: View {
                     presentShareSheet(with: url)
                 }
             } label: {
-                Label("Share", systemImage: "square.and.arrow.up")
+                Label("分享", systemImage: "square.and.arrow.up")
             }
             
             Divider()
@@ -245,11 +245,11 @@ struct FileRow: View {
                     try fm.removeItem(at: file.fileURL)
                     mgr.refreshFiles.toggle()
                 } catch {
-                    print("(fm) failed to delete file: \(error.localizedDescription)")
-                    Alertinator.shared.alert(title: "Failed to delete file!", body: Errors.checkLogs)
+                    print("(fm) 删除文件失败：\(error.localizedDescription)")
+                    Alertinator.shared.alert(title: "删除文件失败！", body: Errors.checkLogs)
                 }
             } label: {
-                Label("Delete", systemImage: "trash")
+                Label("删除", systemImage: "trash")
             }
         }
     }

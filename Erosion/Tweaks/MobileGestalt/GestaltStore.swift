@@ -16,23 +16,23 @@ enum MGURL {
 
 enum MGMsg {
     // warnings
-    static let region = "Enabling this tweak may break regional laws! You could face legal action from your local jurisdiction. Use at your own risk."
-    static let ipadOS = "If you're using an alphanumeric passcode, do not use this tweak at all. Do not turn off \"Show Dock In Stage Manager\" or your device will get softbricked. When this tweak is enabled, expect general instability, unusable apps, and broken device features."
-    static let support = "Do not ask us for support if a tweak does not work properly. Many of these tweaks are dependent on your device or Apple's servers cooperating. Use all of these tweaks at your own risk."
-    static let mgReset = "Resetting MobileGestalt involves deleting the original cache. This'll help you remove tweaks that aren't reverting, but there is a rare chance that your device will get softbricked."
+    static let region = "启用此修改可能违反当地法律！你可能会遭到当地司法管辖区的法律追究。使用前请自行承担风险。"
+    static let ipadOS = "如果你使用的是字母数字密码，请完全不要使用此修改。不要关闭「在台前调度中显示程序坞」，否则设备会变砖。启用此修改后，请预期会出现整体不稳定、应用无法使用以及设备功能异常等问题。"
+    static let support = "如果某个修改无法按预期工作，请不要向我们寻求支持。许多修改都依赖于你的设备以及 Apple 服务器的配合。使用所有这些修改均需自行承担风险。"
+    static let mgReset = "重置 MobileGestalt 会删除原始缓存。这能帮你移除那些无法还原的修改，但存在极小的概率会让设备变砖。"
     
     // info
-    static let intInstall = "This will enable some internal features that were meant for Apple Internal use but were left in production iOS. This tweak may break some device functionality, including installing system apps from the App Store."
-    static let intBuild = "This toggle primarily adds internal storage info in the Settings application. This tweak may cause issues, especially on iPadOS."
-    static let spoofUseless = "Spoofing your device model may break Face ID as well as other features. This tweak won't be of any value to you as your device already supports Apple Intelligence."
-    static let spoofAI = "This tweak does not enable the new Siri AI features. To download AI models, you'll need to spoof your device. Spoofing your device model may break Face ID as well as other features. If you unspoof, do not go back into the Siri section inside of Settings."
-    static let subtype = "Only change your subtype if you'd like to move the Dynamic Island down to a lower position. Enable the Dynamic Island using the toggle further down this page!"
-    static let mgResetComp = "To complete the reset, you'll need to reboot your iPhone. Please do this now."
-    static let revertComp = "It's recommended that you reboot so that all tweaks can revert."
+    static let intInstall = "这将启用一些原本面向 Apple 内部使用、却被遗留在正式版 iOS 中的内部功能。该修改可能破坏部分设备功能，包括从 App Store 安装系统应用。"
+    static let intBuild = "此开关主要会在「设置」应用中显示内部存储信息。该修改可能引发问题，尤其是在 iPadOS 上。"
+    static let spoofUseless = "伪装设备型号可能会导致 Face ID 等功能失效。由于你的设备已支持 Apple Intelligence，此修改对你没有任何意义。"
+    static let spoofAI = "此修改并不会启用新的 Siri AI 功能。若要下载 AI 模型，你需要伪装设备。伪装设备型号可能导致 Face ID 等功能失效。如果取消伪装，请不要再进入「设置」中的 Siri 部分。"
+    static let subtype = "仅当你希望把灵动岛下移到更低的位置时才修改子类型。请使用本页更下方的开关来启用灵动岛！"
+    static let mgResetComp = "要完成重置，你需要重启 iPhone。请立即执行。"
+    static let revertComp = "建议重启设备，以便所有修改都能还原。"
 
     // settings
-    static let mgResetSavWarn = "Before you save MobileGestalt, remove all tweaks so that they don't get re-applied if you ever want to reset your actual gestalt again."
-    static let hidTweakWarn = "By showing tweaks that are intentionally hidden on your specific device configuration, you may be able to enable features that could break your device or lead to data loss!"
+    static let mgResetSavWarn = "在保存 MobileGestalt 之前，请先移除所有修改，这样以后若想重置真实 gestalt 时才不会被重新写入。"
+    static let hidTweakWarn = "显示那些针对你的设备配置而被刻意隐藏的修改，可能会启用一些导致设备损坏或数据丢失的功能！"
 }
 
 enum MGKey {
@@ -160,7 +160,7 @@ final class GestaltStore: ObservableObject {
             set: { enabled in
                 self.objectWillChange.send()
                 if enabled {
-                    Alertinator.shared.alert(title: "Warning!", body: MGMsg.region)
+                    Alertinator.shared.alert(title: "警告！", body: MGMsg.region)
                     self.cacheExtra[MGKey.regionCode] = "LL"
                     self.cacheExtra[MGKey.regionSysconfig] = "LL/A"
                 } else {
@@ -175,7 +175,7 @@ final class GestaltStore: ObservableObject {
     // this function was, surprisingly, made by Siri AI. it works as it should, at least on my test devices, so this'll have to do until someone figures out a better way.
     func mgSetiPadOS(enable: Bool) -> Bool {
         guard let cacheData = mgCurrentDict["CacheData"] as? Data else {
-            print("(mg) failed to set ipados: couldn't get cachedata")
+            print("(mg) 设置 iPadOS 失败：无法获取 CacheData")
             return false
         }
         let hexString = cacheData.map { String(format: "%02x", $0) }.joined()
@@ -184,7 +184,7 @@ final class GestaltStore: ObservableObject {
         let sliceLength = 200
         
         guard hex.count > sliceStart else {
-            print("(mg) failed to set ipados: cache data is too short to contain the required slice.")
+            print("(mg) 设置 iPadOS 失败：缓存数据过短，无法包含所需的字节片段。")
             return false
         }
         
@@ -207,7 +207,7 @@ final class GestaltStore: ObservableObject {
         }
         
         guard let offset = matchedOffset else {
-            print("(mg) failed to set ipados: target pattern not found within the specified slice.")
+            print("(mg) 设置 iPadOS 失败：在指定片段中未找到目标模式。")
             return false
         }
         
@@ -215,14 +215,14 @@ final class GestaltStore: ObservableObject {
         let leftOffset = offset - 67
         
         guard leftOffset > 0, rightOffset < hex.count - 1 else {
-            print("(mg) failed to set ipados: calculated offsets are out of bounds.")
+            print("(mg) 设置 iPadOS 失败：计算出的偏移量超出范围。")
             return false
         }
         
         for position in [leftOffset, rightOffset] {
             guard ["1", "3"].contains(String(hex[position])),
                   hex[position - 1] == "0", hex[position + 1] == "0" else {
-                print("(mg) failed to set ipados: validation failed at calculated offsets.")
+                print("(mg) 设置 iPadOS 失败：在计算出的偏移量处校验失败。")
                 return false
             }
         }
@@ -237,7 +237,7 @@ final class GestaltStore: ObservableObject {
             let next = updatedHex.index(index, offsetBy: 2)
             guard next <= updatedHex.endIndex,
                   let byte = UInt8(updatedHex[index..<next], radix: 16) else {
-                print("(mg) failed to set ipados: failed to reconstruct data from hex string.")
+                print("(mg) 设置 iPadOS 失败：无法从十六进制字符串重建数据。")
                 return false
             }
             updatedData.append(byte)

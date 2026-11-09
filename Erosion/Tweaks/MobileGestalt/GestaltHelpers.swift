@@ -20,7 +20,7 @@ func mgWrite(_ data: Data) -> Bool {
     }
     
     if !res.0 {
-        print("(mg) failed to apply gestalt: \(res.1)")
+        print("(mg) 应用 gestalt 失败：\(res.1)")
         return false
     }
     return true

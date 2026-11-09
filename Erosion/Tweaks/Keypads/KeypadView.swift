@@ -29,21 +29,21 @@ struct KeypadView: View {
             }
             .safeAreaInset(edge: .top) {
                 VStack(spacing: 2) {
-                    Text("Key Size")
+                    Text("按键尺寸")
                     Picker("", selection: $size) {
                         ForEach(KPSize.allCases, id: \.self) { kpSize in
                             Text(kpSize.label + (kpSize == .custom ? " (\(custW)x\(custH))" : "")).tag(kpSize)
                         }
                     }
-                    .alert("What would you like the custom size to be?", isPresented: $showSizeAlert) {
-                        TextField("Width", value: $custW, format: .number)
+                    .alert("你想使用多大的自定义尺寸？", isPresented: $showSizeAlert) {
+                        TextField("宽度", value: $custW, format: .number)
                             .keyboardType(.numberPad)
-                        TextField("Height", value: $custH, format: .number)
+                        TextField("高度", value: $custH, format: .number)
                             .keyboardType(.numberPad)
-                        Button("Cancel", role: .cancel) {
+                        Button("取消", role: .cancel) {
                             size = .defSize
                         }
-                        Button("Set") {
+                        Button("确定") {
                             kpMgr.changeSizeOfKeypads(size: size, custW: custW, custH: custH)
                         }
                     }
@@ -62,12 +62,12 @@ struct KeypadView: View {
                 Button {
                     let res = kpMgr.applyKeypadItems()
                     if res {
-                        Alertinator.shared.alert(title: "Successfully applied custom keypads!", body: KPMsg.applyComp, actionLabel: "Open Phone", action: {
+                        Alertinator.shared.alert(title: "自定义键盘已成功应用！", body: KPMsg.applyComp, actionLabel: "打开「电话」", action: {
                             openApp(withBID: SysBID.phone)
                         })
                         Haptic.shared.play(.soft)
                     } else {
-                        Alertinator.shared.alert(title: "Failed to apply custom keypads!", body: AppMsg.opFailed)
+                        Alertinator.shared.alert(title: "应用自定义键盘失败！", body: AppMsg.opFailed)
                     }
                 } label: {
                     Image(systemName: "checkmark")
@@ -77,7 +77,7 @@ struct KeypadView: View {
                 .padding(.top, 10)
             }
         }
-        .navigationTitle(isPad() ? "" : "Dialer Themer")
+        .navigationTitle(isPad() ? "" : "拨号键盘美化")
         .frame(maxWidth: 325)
         .navigationBarTitleDisplayMode(.inline)
         .toolbar {
@@ -86,48 +86,48 @@ struct KeypadView: View {
                     Button {
                         kpMgr.maskKeysIntoCircle(size: size, custW: custW, custH: custH)
                     } label: {
-                        Label("Mask Keys", systemImage: "circle")
+                        Label("按键蒙版", systemImage: "circle")
                     }
                     Button {
                         size = .defSize
                         kpMgr.getCurrentKeypads()
                     } label: {
-                        Label("Get Current Keys", systemImage: "externaldrive")
+                        Label("获取当前按键", systemImage: "externaldrive")
                     }
                     Button {
                         openApp(withBID: SysBID.phone)
                     } label: {
-                        Label("Open Phone", systemImage: "arrow.up.right.square")
+                        Label("打开「电话」", systemImage: "arrow.up.right.square")
                     }
                     Divider()
                     Button {
                         size = .defSize
                         kpMgr.clearKeypads()
                     } label: {
-                        Label("Clear Keys", systemImage: "xmark")
+                        Label("清除按键", systemImage: "xmark")
                     }
                     Button(role: .destructive) {
-                        Alertinator.shared.alert(title: "Are you sure you'd like to reset your set keys?", body: KPMsg.resetWarn, actionLabel: "Confirm", action: {
+                        Alertinator.shared.alert(title: "确定要重置已设置的按键吗？", body: KPMsg.resetWarn, actionLabel: "确认", action: {
                             let res = kpMgr.resetKeypadItems()
                             if res {
                                 kpMgr.mpKeypad = emptyKeypadArray
                                 kpMgr.getCurrentKeypads()
-                                Alertinator.shared.alert(title: "Successfully reset dialer keys!", body: KPMsg.applyComp)
+                                Alertinator.shared.alert(title: "拨号键盘按键已成功重置！", body: KPMsg.applyComp)
                             } else {
-                                Alertinator.shared.alert(title: "Failed to reset dialer keys!", body: AppMsg.opFailed)
+                                Alertinator.shared.alert(title: "重置拨号键盘按键失败！", body: AppMsg.opFailed)
                             }
                         })
                     } label: {
-                        Label("Reset Keys", systemImage: "trash")
+                        Label("重置按键", systemImage: "trash")
                     }
                 } label: {
-                    Label("Menu", systemImage: "ellipsis")
+                    Label("菜单", systemImage: "ellipsis")
                         .labelStyle(.iconOnly)
                 }
             }
             ToolbarSpacer(placement: .topBarTrailing)
             ToolbarItem(placement: .topBarTrailing) {
-                Button("Import") {
+                Button("导入") {
                     showFileImporter = true
                 }
             }
@@ -210,15 +210,15 @@ struct KeypadView: View {
                 if res {
                     Haptic.shared.play(.soft)
                 } else {
-                    throw "failed to import theme!"
+                    throw "导入主题失败！"
                 }
             } catch {
-                print("(kp) failed to import theme: \(error.localizedDescription)")
-                Alertinator.shared.alert(title: "Failed to import file!", body: AppMsg.opFailed)
+                print("(kp) 导入主题失败：\(error.localizedDescription)")
+                Alertinator.shared.alert(title: "导入文件失败！", body: AppMsg.opFailed)
             }
         case .failure(let error):
-            print("(kp) failed to import file: \(error.localizedDescription)")
-            Alertinator.shared.alert(title: "Failed to import file!", body: "\(error.localizedDescription)")
+            print("(kp) 导入文件失败：\(error.localizedDescription)")
+            Alertinator.shared.alert(title: "导入文件失败！", body: "\(error.localizedDescription)")
         }
     }
     

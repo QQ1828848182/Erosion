@@ -22,14 +22,14 @@ func writeFileTemp(_ data: Data, to url: URL) -> (Bool, String) {
         
         return (true, "succeeded")
     } catch {
-        print("(fm) failed to write file: \(error.localizedDescription)")
+        print("(fm) 写入文件失败：\(error.localizedDescription)")
         return (false, error.localizedDescription)
     }
 }
 
 func writeFileAtomically(_ data: Data, to url: URL) -> (Bool, String) {
     guard let og = try? Data(contentsOf: url) else {
-        return (false, "failed to get original file data!")
+        return (false, "无法获取原始文件数据！")
     }
 
     let fd = url.path.withCString {

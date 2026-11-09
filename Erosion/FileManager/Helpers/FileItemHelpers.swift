@@ -92,6 +92,14 @@ func getFileItem(at url: URL, isContainer: Bool = false) -> FileItem {
 enum FileType: String {
     case file, folder, symlink
     
+    var label: String {
+        switch self {
+        case .file: return "文件"
+        case .folder: return "文件夹"
+        case .symlink: return "符号链接"
+        }
+    }
+    
     var sortOrder: Int {
         switch self {
         case .file: return 0

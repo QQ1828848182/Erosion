@@ -21,15 +21,15 @@ struct OperationsView: View {
     var body: some View {
         List {
             Section {
-                TextField("Directory", text: $directory)
+                TextField("目录", text: $directory)
                     .disabled(isAcc)
-                TextField("File Name", text: $fileName)
+                TextField("文件名", text: $fileName)
                     .disabled(isAcc)
                 HStack {
-                    Button("Grant Access") {
+                    Button("授予访问权限") {
                         let res = wq.grantAccess(path: "\(directory)/\(fileName)")
                         if !res.0 {
-                            Alertinator.shared.alert(title: "Failed to get access to target file!", body: "\(res.1): \(res.2)")
+                            Alertinator.shared.alert(title: "获取目标文件访问权限失败！", body: "\(res.1): \(res.2)")
                         } else {
                             isAcc = true
                         }
@@ -39,30 +39,30 @@ struct OperationsView: View {
                         Spacer()
                         HStack {
                             Image(systemName: "checkmark")
-                            Text("Access Granted")
+                            Text("已获得访问权限")
                         }
                         .foregroundStyle(.green)
                     }
                 }
                 if isAcc {
-                    Button("Change Path", role: .destructive) {
+                    Button("更改路径", role: .destructive) {
                         isAcc = false
                         imprtName = ""
                         imprtData = Data()
                     }
                     
-                    Button("Export File") {
+                    Button("导出文件") {
                         let fileDir = "\(directory)/\(fileName)"
                         presentShareSheet(with: URL(fileURLWithPath: fileDir))
                     }
                 }
             } header: {
-                HeaderLabel("Target", symbol: "dot.scope")
+                HeaderLabel("目标", symbol: "dot.scope")
             }
             
             Section {
                 HStack {
-                    Button("Import File") {
+                    Button("导入文件") {
                         showImporter = true
                     }
                     .disabled(!imprtData.isEmpty)
@@ -74,49 +74,49 @@ struct OperationsView: View {
                     }
                 }
                 
-                Button("Overwrite File") {
+                Button("覆盖文件") {
                     do {
                         let targetURL = URL(fileURLWithPath: "\(directory)/\(fileName)")
                         try imprtData.write(to: targetURL)
-                        print("(ov) successfully overwrote file: \(targetURL.path) (\(imprtData.count))")
+                        print("(ov) 文件覆盖成功：\(targetURL.path)（\(imprtData.count) 字节）")
                         Haptic.shared.play(.soft)
                     } catch {
-                        print("(ov) failed to overwrite: \(error.localizedDescription)")
-                        Alertinator.shared.alert(title: "Failed to overwrite file!", body: "Make sure that your paths are correct and that you have access. Check error logs for more detailed information.")
+                        print("(ov) 覆盖失败：\(error.localizedDescription)")
+                        Alertinator.shared.alert(title: "覆盖文件失败！", body: "请确认路径正确且你拥有访问权限。查看错误日志以获取更详细的信息。")
                     }
                 }
                 .disabled(imprtData.isEmpty)
                 
-                Button("Move File") {
+                Button("移动文件") {
                     do {
                         let targetURL = URL(fileURLWithPath: "\(directory)").appendingPathComponent(imprtName)
                         try imprtData.write(to: targetURL)
-                        print("(ov) successfully moved file: \(imprtName) -> \(targetURL.path)")
+                        print("(ov) 文件移动成功：\(imprtName) -> \(targetURL.path)")
                         Haptic.shared.play(.soft)
                     } catch {
-                        print("(ov) failed to move: \(error.localizedDescription)")
-                        Alertinator.shared.alert(title: "Failed to move file!", body: "Make sure that your paths are correct and that you have access. Check error logs for more detailed information.")
+                        print("(ov) 移动失败：\(error.localizedDescription)")
+                        Alertinator.shared.alert(title: "移动文件失败！", body: "请确认路径正确且你拥有访问权限。查看错误日志以获取更详细的信息。")
                     }
                 }
                 .disabled(imprtData.isEmpty)
                 
-                Button("Delete File", role: .destructive) {
+                Button("删除文件", role: .destructive) {
                     do {
                         let targetURL = URL(fileURLWithPath: "\(directory)/\(fileName)")
                         try fm.removeItem(at: targetURL)
-                        print("(ov) successfully deleted file: \(targetURL.path)")
+                        print("(ov) 文件删除成功：\(targetURL.path)")
                         Haptic.shared.play(.heavy)
                     } catch {
-                        print("(ov) failed to delete: \(error.localizedDescription)")
-                        Alertinator.shared.alert(title: "Failed to delete file!", body: "Make sure that your paths are correct and that you have access. Check error logs for more detailed information.")
+                        print("(ov) 删除失败：\(error.localizedDescription)")
+                        Alertinator.shared.alert(title: "删除文件失败！", body: "请确认路径正确且你拥有访问权限。查看错误日志以获取更详细的信息。")
                     }
                 }
                 .disabled(imprtData.isEmpty)
             } header: {
-                HeaderLabel("Operations", symbol: "wrench.and.screwdriver")
+                HeaderLabel("操作", symbol: "wrench.and.screwdriver")
             }
         }
-        .navigationTitle("File Operations")
+        .navigationTitle("文件操作")
         .fileImporter(isPresented: $showImporter, allowedContentTypes: [.item]) { result in
             handleImport(result)
         }
@@ -136,12 +136,12 @@ struct OperationsView: View {
                 imprtData = try Data(contentsOf: recURL)
                 imprtName = recURL.lastPathComponent
             } catch {
-                print("(ov) failed to import file: \(error.localizedDescription)")
-                Alertinator.shared.alert(title: "Failed to import file!", body: "This file is likely invaild, corrupted, or inaccessible. Please try a different overwrite file.")
+                print("(ov) 导入文件失败：\(error.localizedDescription)")
+                Alertinator.shared.alert(title: "导入文件失败！", body: "该文件可能无效、已损坏或无法访问。请尝试其他用于覆盖的文件。")
             }
         case .failure(let error):
-            print("(ov) failed to import file: \(error.localizedDescription)")
-            Alertinator.shared.alert(title: "Failed to import file!", body: "This file is likely invaild, corrupted, or inaccessible. Please try a different overwrite file.")
+            print("(ov) 导入文件失败：\(error.localizedDescription)")
+            Alertinator.shared.alert(title: "导入文件失败！", body: "该文件可能无效、已损坏或无法访问。请尝试其他用于覆盖的文件。")
         }
     }
 }

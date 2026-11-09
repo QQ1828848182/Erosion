@@ -21,37 +21,37 @@ struct InfoViewer: View {
         NavigationView {
             List {
                 Section {
-                    StringInfoCell(file.name, label: "Name")
-                    StringInfoCell(file.fileURL.path, label: "Path")
+                    StringInfoCell(file.name, label: "名称")
+                    StringInfoCell(file.fileURL.path, label: "路径")
                     if file.type == .symlink {
-                        StringInfoCell(file.destURL.path, label: "Destination Path")
+                        StringInfoCell(file.destURL.path, label: "目标路径")
                     }
                     if file.type == .file {
-                        StringInfoCell("\(ByteCountFormatter.string(fromByteCount: Int64(file.size), countStyle: .file))", label: "Size")
+                        StringInfoCell("\(ByteCountFormatter.string(fromByteCount: Int64(file.size), countStyle: .file))", label: "大小")
                     }
                 }
                 
                 Section {
                     StringInfoCell(file.uttype.identifier, label: "UTType")
-                    StringInfoCell(file.creationDateStr, label: "Creation Date")
-                    StringInfoCell(file.modifiedDateStr, label: "Last Modified")
-                    BoolInfoCell(file.type == .symlink, label: "Symlink")
+                    StringInfoCell(file.creationDateStr, label: "创建日期")
+                    StringInfoCell(file.modifiedDateStr, label: "修改日期")
+                    BoolInfoCell(file.type == .symlink, label: "符号链接")
                 } header: {
-                    HeaderLabel("File", symbol: "doc")
+                    HeaderLabel("文件", symbol: "doc")
                 }
                 
                 Section {
-                    StringInfoCell(file.posixPerms, label: "POSIX Permissions")
-                    StringInfoCell(file.owner, label: "Owner")
-                    StringInfoCell(file.group, label: "Group")
-                    BoolInfoCell(file.readable, label: "Readable")
-                    BoolInfoCell(file.writable, label: "Writable")
-                    BoolInfoCell(file.executable, label: "Executable")
+                    StringInfoCell(file.posixPerms, label: "POSIX 权限")
+                    StringInfoCell(file.owner, label: "所有者")
+                    StringInfoCell(file.group, label: "群组")
+                    BoolInfoCell(file.readable, label: "可读")
+                    BoolInfoCell(file.writable, label: "可写")
+                    BoolInfoCell(file.executable, label: "可执行")
                 } header: {
-                    HeaderLabel("Permissions", symbol: "shield")
+                    HeaderLabel("权限", symbol: "shield")
                 }
             }
-            .navigationTitle("\(file.type.rawValue.capitalized) Info")
+            .navigationTitle("\(file.type.label)信息")
             .navigationBarTitleDisplayMode(.inline)
             .listStyle(.insetGrouped)
             .toolbar {
@@ -59,7 +59,7 @@ struct InfoViewer: View {
                     Button {
                         dismiss()
                     } label: {
-                        ToolbarLabel("Close", symbol: "xmark")
+                        ToolbarLabel("关闭", symbol: "xmark")
                     }
                 }
             }
@@ -87,7 +87,7 @@ struct InfoViewer: View {
                 Button {
                     UIPasteboard.general.string = string
                 } label: {
-                    Label("Copy Value", systemImage: "doc.on.doc")
+                    Label("拷贝值", systemImage: "doc.on.doc")
                 }
             }
         }
